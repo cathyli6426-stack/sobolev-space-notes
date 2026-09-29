@@ -1,0 +1,1360 @@
+# 第五课复盘：$L^p$ 空间与基本不等式
+
+> 教材范围：2.1—2.13
+> 核心主线：$L^p$ 空间的定义 $\longrightarrow$ Hölder 不等式 $\longrightarrow$ 对偶刻画 $\longrightarrow$ Minkowski 不等式 $\longrightarrow$ 插值 $\longrightarrow$ $0<p<1$ 时的反向不等式。
+
+## 0. 本节课的知识结构
+
+这一节是在建立 $L^p$ 空间的基本结构。各结论之间的依赖关系是
+
+$$
+\text{凸性}
+\Longrightarrow
+\text{Young 不等式}
+\Longrightarrow
+\text{Hölder 不等式}
+\Longrightarrow
+\begin{cases}
+\text{乘积估计},\\
+\text{$L^p$ 范数的对偶刻画}
+\end{cases}
+\Longrightarrow
+\text{Minkowski 不等式}.
+$$
+
+在此基础上，还可以得到
+
+$$
+\text{积分型 Minkowski 不等式}
+\quad\text{和}\quad
+L^p\text{ 插值不等式}.
+$$
+
+当 $0<p<1$ 时，$t^p$ 从凸函数变成凹函数，许多不等式的方向随之改变。这正是反向 Hölder 与反向 Minkowski 不等式出现的根本原因。
+
+---
+
+## 2.1 $L^p(\Omega)$ 空间
+
+设 $\Omega\subset\mathbb R^n$ 为可测集，$0<p<\infty$。定义
+
+$$
+L^p(\Omega)
+:=
+\left\{
+u:\Omega\to\mathbb C:
+u\text{ 可测且 }
+\int_\Omega |u(x)|^p\,dx<\infty
+\right\}.
+$$
+
+严格来说，$L^p(\Omega)$ 的元素不是单个函数，而是按“几乎处处相等”划分的等价类：
+
+$$
+u\sim v
+\quad\Longleftrightarrow\quad
+u=v\quad\text{几乎处处于 }\Omega.
+$$
+
+因此
+
+$$
+u=0\text{ 于 }L^p(\Omega)
+\quad\Longleftrightarrow\quad
+u(x)=0\text{ 几乎处处}.
+$$
+
+### 为什么一定要取等价类
+
+如果两个函数只在零测集上不同，则
+
+$$
+\int_\Omega |u-v|^p\,dx=0.
+$$
+
+从积分的角度无法区分它们。若不把它们视为同一个元素，后面定义的“范数”就无法满足
+
+$$
+\|u-v\|_p=0\Longrightarrow u=v.
+$$
+
+### $L^p(\Omega)$ 为什么是向量空间
+
+数乘封闭性显然。对于加法：
+
+- 当 $p\ge1$ 时，由 2.2 的估计
+  
+  $$
+  |u+v|^p
+  \le 2^{p-1}(|u|^p+|v|^p);
+  $$
+- 当 $0<p<1$ 时，由 $t^p$ 的凹性可得
+  
+  $$
+  (a+b)^p\le a^p+b^p,\qquad a,b\ge0,
+  $$
+  
+  因而
+  
+  $$
+  |u+v|^p\le |u|^p+|v|^p.
+  $$
+
+两种情形下，只要 $u,v\in L^p(\Omega)$，就有 $u+v\in L^p(\Omega)$。
+
+---
+
+## 2.2 基本代数估计
+
+### 引理
+
+若 $1\le p<\infty$ 且 $a,b\ge0$，则
+
+$$
+(a+b)^p\le 2^{p-1}(a^p+b^p).
+$$
+
+### 证明
+
+当 $p=1$ 时等号显然成立。
+
+当 $p>1$ 时，函数
+
+$$
+f(t)=t^p,\qquad t\ge0
+$$
+
+是凸函数，因为
+
+$$
+f''(t)=p(p-1)t^{p-2}\ge0.
+$$
+
+由凸函数的中点不等式，
+
+$$
+\left(\frac{a+b}{2}\right)^p
+\le\frac{a^p+b^p}{2}.
+$$
+
+两边乘以 $2^p$，得到
+
+$$
+(a+b)^p\le2^{p-1}(a^p+b^p).
+$$
+
+将 $a=|u(x)|$、$b=|v(x)|$ 代入并积分，可得 $L^p(\Omega)$ 对加法封闭。
+
+> 这个估计只能说明 $u+v\in L^p$，还不能给出最优的三角不等式。真正的三角不等式要到 2.8 用 Minkowski 不等式证明。
+
+---
+
+## 2.3 $L^p$ 范数与拟范数
+
+对 $0<p<\infty$，记
+
+$$
+\|u\|_p
+:=
+\left(\int_\Omega|u(x)|^p\,dx\right)^{1/p}.
+$$
+
+当可能混淆积分区域时，写成 $\|u\|_{p,\Omega}$。
+
+### 当 $1\le p<\infty$
+
+$\|\cdot\|_p$ 是范数：
+
+1. $\|u\|_p\ge0$；
+2. $\|u\|_p=0$ 当且仅当 $u=0$ 几乎处处；
+3. $\|cu\|_p=|c|\|u\|_p$；
+4. Minkowski 不等式：
+   
+   $$
+   \|u+v\|_p\le\|u\|_p+\|v\|_p.
+   $$
+
+前三条直接成立，第四条将在 2.8 证明。
+
+### 当 $0<p<1$
+
+$\|\cdot\|_p$ 不是范数，因为通常不满足三角不等式。不过有
+
+$$
+\|u+v\|_p^p
+\le\|u\|_p^p+\|v\|_p^p.
+$$
+
+因此 $\|\cdot\|_p$ 称为拟范数，而
+
+$$
+d(u,v):=\|u-v\|_p^p
+$$
+
+给出了一个真正的度量。
+
+例如，取两个不交且测度均为 $1$ 的集合 $A,B$，令
+
+$$
+u=\chi_A,\qquad v=\chi_B.
+$$
+
+当 $0<p<1$ 时，
+
+$$
+\|u\|_p=\|v\|_p=1,
+\qquad
+\|u+v\|_p=2^{1/p}>2,
+$$
+
+所以通常的三角不等式失败。
+
+---
+
+## 2.4 Hölder 不等式
+
+设 $1<p<\infty$，定义 $p$ 的共轭指数
+
+$$
+p'=\frac{p}{p-1},
+\qquad
+\frac1p+\frac1{p'}=1.
+$$
+
+若 $u\in L^p(\Omega)$，$v\in L^{p'}(\Omega)$，则
+
+$$
+uv\in L^1(\Omega)
+$$
+
+且
+
+$$
+\boxed{
+\int_\Omega|u(x)v(x)|\,dx
+\le\|u\|_p\|v\|_{p'}.
+}
+$$
+
+### 2.4.1 预备：Young 不等式
+
+若 $a,b\ge0$，则
+
+$$
+\boxed{
+ab\le\frac{a^p}{p}+\frac{b^{p'}}{p'}.
+}
+$$
+
+等号成立当且仅当
+
+$$
+a^p=b^{p'}.
+$$
+
+#### 证明一：教材中的凸性证明
+
+对 $a,b>0$，令
+
+$$
+A=\log(a^p),\qquad B=\log(b^{p'}).
+$$
+
+指数函数是严格凸函数，而
+
+$$
+\frac1p+\frac1{p'}=1.
+$$
+
+所以
+
+$$
+\exp\left(\frac A p+\frac B{p'}\right)
+\le\frac1p e^A+\frac1{p'}e^B.
+$$
+
+左边恰好为 $ab$，右边为 $a^p/p+b^{p'}/p'$，因此得到 Young 不等式。
+
+#### 证明二：极值法
+
+固定 $b\ge0$，考虑
+
+$$
+F(a)=ab-\frac{a^p}{p},\qquad a\ge0.
+$$
+
+由
+
+$$
+F'(a)=b-a^{p-1},
+$$
+
+$F$ 在
+
+$$
+a=b^{1/(p-1)}=b^{p'-1}
+$$
+
+处取得最大值。代入得到
+
+$$
+F(a)\le\frac{b^{p'}}{p'}.
+$$
+
+移项即得
+
+$$
+ab\le\frac{a^p}{p}+\frac{b^{p'}}{p'}.
+$$
+
+这种证明实际上说明 $t^p/p$ 与 $t^{p'}/p'$ 互为凸共轭。
+
+### 2.4.2 Hölder 不等式的证明
+
+若 $\|u\|_p=0$ 或 $\|v\|_{p'}=0$，结论显然。否则在 Young 不等式中取
+
+$$
+a=\frac{|u(x)|}{\|u\|_p},
+\qquad
+b=\frac{|v(x)|}{\|v\|_{p'}}.
+$$
+
+则
+
+$$
+\frac{|u(x)v(x)|}{\|u\|_p\|v\|_{p'}}
+\le
+\frac1p\frac{|u(x)|^p}{\|u\|_p^p}
++\frac1{p'}\frac{|v(x)|^{p'}}{\|v\|_{p'}^{p'}}.
+$$
+
+在 $\Omega$ 上积分，得到
+
+$$
+\frac{\int_\Omega|uv|\,dx}
+{\|u\|_p\|v\|_{p'}}
+\le\frac1p+\frac1{p'}=1.
+$$
+
+即得 Hölder 不等式。
+
+### 2.4.3 等号条件
+
+若两个范数均非零，则 Hölder 等号成立当且仅当存在常数 $\lambda>0$，使
+
+$$
+|u(x)|^p=\lambda|v(x)|^{p'}
+$$
+
+几乎处处成立。
+
+这里研究的是 $\int|uv|$，所以只涉及绝对值。若研究
+
+$$
+\left|\int_\Omega u\overline v\,dx\right|,
+$$
+
+还需要复数相位方向一致，才能在积分三角不等式中取到等号。
+
+### 2.4.4 端点情形
+
+Hölder 不等式还包括
+
+$$
+p=1,\quad p'=\infty
+$$
+
+以及
+
+$$
+p=\infty,\quad p'=1.
+$$
+
+例如
+
+$$
+\int_\Omega|uv|\,dx
+\le\|u\|_1\|v\|_\infty.
+$$
+
+---
+
+## 2.5 Hölder 不等式的乘积推论
+
+设 $p,q,r>0$ 满足
+
+$$
+\frac1p+\frac1q=\frac1r.
+$$
+
+若
+
+$$
+u\in L^p(\Omega),
+\qquad
+v\in L^q(\Omega),
+$$
+
+则
+
+$$
+uv\in L^r(\Omega)
+$$
+
+且
+
+$$
+\boxed{\|uv\|_r\le\|u\|_p\|v\|_q.}
+$$
+
+### 证明
+
+由指数关系，
+
+$$
+\frac r p+\frac r q=1.
+$$
+
+所以 $p/r$ 与 $q/r$ 是共轭指数。对 $|u|^r$ 与 $|v|^r$ 使用 Hölder 不等式：
+
+$$
+\begin{aligned}
+\|uv\|_r^r
+&=\int_\Omega |u|^r|v|^r\,dx\\
+&\le
+\left(\int_\Omega|u|^p\,dx\right)^{r/p}
+\left(\int_\Omega|v|^q\,dx\right)^{r/q}\\
+&=\|u\|_p^r\|v\|_q^r.
+\end{aligned}
+$$
+
+两边取 $r$ 次方根即可。
+
+最常用的特例是
+
+$$
+\frac1p+\frac1q=1
+\quad\Longrightarrow\quad
+L^p\cdot L^q\subset L^1.
+$$
+
+---
+
+## 2.6 多函数 Hölder 不等式
+
+设 $u_j\in L^{p_j}(\Omega)$，$j=1,\ldots,N$，并且
+
+$$
+\sum_{j=1}^N\frac1{p_j}=\frac1q.
+$$
+
+则
+
+$$
+\prod_{j=1}^N u_j\in L^q(\Omega)
+$$
+
+且
+
+$$
+\boxed{
+\left\|\prod_{j=1}^N u_j\right\|_q
+\le
+\prod_{j=1}^N\|u_j\|_{p_j}.
+}
+$$
+
+证明可由 2.5 反复使用或对 $N$ 归纳得到。
+
+当 $q=1$ 时，条件写成
+
+$$
+\sum_{j=1}^N\frac1{p_j}=1,
+$$
+
+这是分析中最常见的多因子 Hölder 形式。
+
+---
+
+## 2.7 Hölder 不等式的逆命题：$L^p$ 范数的对偶刻画
+
+设 $1<p<\infty$。对任意可测函数 $u$，
+
+$$
+u\in L^p(\Omega)
+$$
+
+当且仅当
+
+$$
+\sup\left\{
+\int_\Omega |u(x)|v(x)\,dx:
+v\ge0,\ \|v\|_{p'}\le1
+\right\}<\infty.
+$$
+
+而且当 $u\in L^p(\Omega)$ 时，
+
+$$
+\boxed{
+\|u\|_p
+=
+\sup_{\substack{v\ge0\\\|v\|_{p'}\le1}}
+\int_\Omega|u|v\,dx.
+}
+$$
+
+### 2.7.1 为什么上确界不超过 $\|u\|_p$
+
+由 Hölder 不等式，对任何满足条件的 $v$，
+
+$$
+\int_\Omega|u|v\,dx
+\le\|u\|_p\|v\|_{p'}
+\le\|u\|_p.
+$$
+
+所以
+
+$$
+\sup_{\substack{v\ge0\\\|v\|_{p'}\le1}}
+\int_\Omega|u|v\,dx
+\le\|u\|_p.
+$$
+
+### 2.7.2 如何构造取到等号的函数
+
+若 $0<\|u\|_p<\infty$，令
+
+$$
+v_0(x)
+=
+\left(\frac{|u(x)|}{\|u\|_p}\right)^{p-1}
+=
+\left(\frac{|u(x)|}{\|u\|_p}\right)^{p/p'}.
+$$
+
+因为
+
+$$
+(p-1)p'=p,
+$$
+
+所以
+
+$$
+\begin{aligned}
+\|v_0\|_{p'}^{p'}
+&=\int_\Omega
+\left(\frac{|u|}{\|u\|_p}\right)^p dx\\
+&=1.
+\end{aligned}
+$$
+
+即 $\|v_0\|_{p'}=1$。同时
+
+$$
+\begin{aligned}
+\int_\Omega|u|v_0\,dx
+&=
+\frac{\int_\Omega|u|^p\,dx}
+{\|u\|_p^{p-1}}\\
+&=\|u\|_p.
+\end{aligned}
+$$
+
+故上确界恰好等于 $\|u\|_p$。
+
+### 2.7.3 为什么上确界有限能反推 $u\in L^p$
+
+反设 $\|u\|_p=\infty$。可取一列非负简单函数 $s_j$，满足
+
+$$
+0\le s_j\le|u|,
+\qquad
+\|s_j\|_p\longrightarrow\infty.
+$$
+
+定义
+
+$$
+v_j
+=
+\left(\frac{s_j}{\|s_j\|_p}\right)^{p-1}.
+$$
+
+则 $\|v_j\|_{p'}=1$，并且
+
+$$
+\int_\Omega|u|v_j\,dx
+\ge
+\int_\Omega s_jv_j\,dx
+=\|s_j\|_p
+\longrightarrow\infty.
+$$
+
+这与上确界有限矛盾。因此 $u\in L^p(\Omega)$。
+
+### 2.7.4 复值函数的常用形式
+
+对复值函数，更常写为
+
+$$
+\boxed{
+\|u\|_p
+=
+\sup_{\|v\|_{p'}\le1}
+\left|\int_\Omega u(x)\overline{v(x)}\,dx\right|.
+}
+$$
+
+取
+
+$$
+v_0
+=
+\frac{|u|^{p-2}u}{\|u\|_p^{p-1}}
+$$
+
+即可取到等号；在 $u=0$ 的点上把 $v_0$ 定义为 $0$。
+
+> 这个公式说明 $L^{p'}$ 中的函数可以“测试”出 $L^p$ 范数。但仅凭这个公式还没有完整证明 $(L^p)'=L^{p'}$；完整的对偶空间表示还需要证明每个连续线性泛函都来自这样的积分配对。
+
+当 $p=1$ 时，相应端点公式为
+
+$$
+\|u\|_1
+=
+\sup_{\|v\|_\infty\le1}
+\left|\int_\Omega u\overline v\,dx\right|.
+$$
+
+---
+
+## 2.8 Minkowski 不等式
+
+若 $1\le p<\infty$，则
+
+$$
+\boxed{
+\|u+v\|_p
+\le\|u\|_p+\|v\|_p.
+}
+$$
+
+这正是 $L^p$ 范数的三角不等式。
+
+### 当 $p=1$
+
+由点态三角不等式，
+
+$$
+|u+v|\le|u|+|v|,
+$$
+
+直接积分得
+
+$$
+\|u+v\|_1\le\|u\|_1+\|v\|_1.
+$$
+
+### 当 $1<p<\infty$：利用对偶刻画
+
+由 2.7，
+
+$$
+\|u+v\|_p
+=
+\sup_{\substack{w\ge0\\\|w\|_{p'}\le1}}
+\int_\Omega|u+v|w\,dx.
+$$
+
+对每个满足条件的 $w$，
+
+$$
+\begin{aligned}
+\int_\Omega|u+v|w\,dx
+&\le\int_\Omega(|u|+|v|)w\,dx\\
+&\le\|u\|_p\|w\|_{p'}
++\|v\|_p\|w\|_{p'}\\
+&\le\|u\|_p+\|v\|_p.
+\end{aligned}
+$$
+
+对 $w$ 取上确界，得到 Minkowski 不等式。
+
+### 另一种常见证明
+
+也可从
+
+$$
+\|u+v\|_p^p
+\le
+\int_\Omega |u|\,|u+v|^{p-1}dx
++\int_\Omega |v|\,|u+v|^{p-1}dx
+$$
+
+出发，对两个积分分别使用 Hölder 不等式。由于
+
+$$
+\bigl\||u+v|^{p-1}\bigr\|_{p'}
+=\|u+v\|_p^{p-1},
+$$
+
+可得
+
+$$
+\|u+v\|_p^p
+\le
+(\|u\|_p+\|v\|_p)\|u+v\|_p^{p-1}.
+$$
+
+约去公共因子后同样得到结论。
+
+---
+
+## 2.9 积分型 Minkowski 不等式
+
+设 $1\le p<\infty$，$f$ 是 $\mathbb R^m\times\mathbb R^n$ 上的可测函数，并满足：
+
+1. 对几乎所有 $y\in\mathbb R^n$，
+   
+   $$
+   f(\cdot,y)\in L^p(\mathbb R^m);
+   $$
+2. 函数
+   
+   $$
+   y\longmapsto\|f(\cdot,y)\|_{p,\mathbb R^m}
+   $$
+   
+   属于 $L^1(\mathbb R^n)$。
+
+则
+
+$$
+x\longmapsto\int_{\mathbb R^n}f(x,y)\,dy
+$$
+
+属于 $L^p(\mathbb R^m)$，并且
+
+$$
+\boxed{
+\left\|
+\int_{\mathbb R^n}f(\cdot,y)\,dy
+\right\|_{p,\mathbb R^m}
+\le
+\int_{\mathbb R^n}
+\|f(\cdot,y)\|_{p,\mathbb R^m}\,dy.
+}
+$$
+
+展开写即
+
+$$
+\left(
+\int_{\mathbb R^m}
+\left|
+\int_{\mathbb R^n}f(x,y)\,dy
+\right|^pdx
+\right)^{1/p}
+\le
+\int_{\mathbb R^n}
+\left(
+\int_{\mathbb R^m}|f(x,y)|^pdx
+\right)^{1/p}dy.
+$$
+
+### 证明思路
+
+先令
+
+$$
+F(x,y)=|f(x,y)|,
+\qquad
+h(x)=\int_{\mathbb R^n}F(x,y)\,dy.
+$$
+
+因为
+
+$$
+\left|\int f(x,y)\,dy\right|\le h(x),
+$$
+
+只需估计 $\|h\|_p$。
+
+当 $p=1$ 时，由 Fubini–Tonelli 定理，
+
+$$
+\|h\|_1
+=\int_{\mathbb R^n}
+\|f(\cdot,y)\|_1\,dy.
+$$
+
+当 $1<p<\infty$ 时，利用 2.7 的对偶刻画。对任意 $w\ge0$、$\|w\|_{p'}\le1$，
+
+$$
+\begin{aligned}
+\int_{\mathbb R^m}h(x)w(x)\,dx
+&=
+\int_{\mathbb R^m}
+\int_{\mathbb R^n}
+F(x,y)w(x)\,dydx\\
+&=
+\int_{\mathbb R^n}
+\int_{\mathbb R^m}
+F(x,y)w(x)\,dxdy\\
+&\le
+\int_{\mathbb R^n}
+\|f(\cdot,y)\|_p\|w\|_{p'}\,dy\\
+&\le
+\int_{\mathbb R^n}
+\|f(\cdot,y)\|_p\,dy.
+\end{aligned}
+$$
+
+第一步交换积分次序使用了 Tonelli 定理，内层估计使用了 Hölder 不等式。最后对 $w$ 取上确界，得到
+
+$$
+\|h\|_p
+\le
+\int_{\mathbb R^n}\|f(\cdot,y)\|_p\,dy.
+$$
+
+> 记忆方式：普通 Minkowski 是“有限求和可以移到 $L^p$ 范数外”，积分型 Minkowski 则是它的连续版本：
+> 
+> $$
+> \left\|\int f(\cdot,y)\,dy\right\|_p
+> \le\int\|f(\cdot,y)\|_p\,dy.
+> $$
+
+注意积分顺序不能随意交换；必须由 Tonelli 或 Fubini 定理保证。
+
+---
+
+## 2.10 $L^\infty(\Omega)$ 与本性上确界
+
+### 2.10.1 本性有界
+
+可测函数 $u$ 称为本性有界，如果存在 $K\ge0$，使得
+
+$$
+|u(x)|\le K
+\qquad\text{几乎处处于 }\Omega.
+$$
+
+所有本性有界函数组成 $L^\infty(\Omega)$。
+
+定义
+
+$$
+\boxed{
+\|u\|_\infty
+:=
+\mathop{\mathrm{ess\,sup}}_{x\in\Omega}|u(x)|
+:=
+\inf\left\{
+K\ge0:
+|u(x)|\le K\text{ 几乎处处}
+\right\}.
+}
+$$
+
+### 2.10.2 为什么不是普通上确界
+
+$L^p$ 中的函数按几乎处处相等识别。在一个零测集上任意改变函数值，不应改变其范数。
+
+例如，在 $[0,1]$ 上定义
+
+$$
+u(0)=100,\qquad u(x)=1\quad(x\ne0).
+$$
+
+则
+
+$$
+\sup_{[0,1]}|u|=100,
+\qquad
+\mathop{\mathrm{ess\,sup}}_{[0,1]}|u|=1.
+$$
+
+因为单点 $\{0\}$ 是零测集。
+
+### 2.10.3 $L^\infty$ 与有限指数 $L^p$ 的关系
+
+若 $K\subset\Omega$ 可测且 $|K|<\infty$，则
+
+$$
+\int_K|u|^pdx
+\le\|u\|_\infty^p|K|.
+$$
+
+因此
+
+$$
+\|u\|_{L^p(K)}
+\le |K|^{1/p}\|u\|_\infty.
+$$
+
+由此得到：
+
+1. 总有
+   
+   $$
+   L^\infty(\Omega)\subset L^p_{\mathrm{loc}}(\Omega),
+   $$
+   
+   因为紧集具有有限测度；
+2. 若 $|\Omega|<\infty$，则
+   
+   $$
+   L^\infty(\Omega)\subset L^p(\Omega);
+   $$
+3. 若 $|\Omega|=\infty$，上述整体包含关系一般不成立。例如
+   
+   $$
+   u(x)\equiv1\quad\text{于 }\mathbb R^n
+   $$
+   
+   属于 $L^\infty(\mathbb R^n)$，但不属于任何有限指数的 $L^p(\mathbb R^n)$。
+
+Hölder 不等式也延伸到端点
+
+$$
+\int_\Omega|uv|
+\le\|u\|_\infty\|v\|_1.
+$$
+
+---
+
+## 2.11 $L^p$ 插值不等式
+
+设
+
+$$
+1\le p<q<r\le\infty
+$$
+
+并取 $0<\theta<1$，使得
+
+$$
+\frac1q
+=
+\frac\theta p+\frac{1-\theta}{r}.
+$$
+
+若
+
+$$
+u\in L^p(\Omega)\cap L^r(\Omega),
+$$
+
+则
+
+$$
+u\in L^q(\Omega)
+$$
+
+且
+
+$$
+\boxed{
+\|u\|_q
+\le
+\|u\|_p^\theta
+\|u\|_r^{1-\theta}.
+}
+$$
+
+这称为插值估计：$q$ 位于 $p$ 与 $r$ 之间，其倒数是两个端点倒数的凸组合。本节只使用上面的具体不等式，不涉及抽象插值空间理论。
+
+### 当 $r<\infty$ 时的证明
+
+分解
+
+$$
+|u|^q
+=|u|^{\theta q}|u|^{(1-\theta)q}.
+$$
+
+令
+
+$$
+s=\frac{p}{\theta q},
+\qquad
+s'=\frac{r}{(1-\theta)q}.
+$$
+
+由指数关系可验证
+
+$$
+\frac1s+\frac1{s'}=1.
+$$
+
+对两个因子使用 Hölder 不等式：
+
+$$
+\begin{aligned}
+\int_\Omega|u|^qdx
+&\le
+\left(
+\int_\Omega|u|^{\theta qs}dx
+\right)^{1/s}
+\left(
+\int_\Omega|u|^{(1-\theta)qs'}dx
+\right)^{1/s'}\\
+&=
+\left(\int_\Omega|u|^pdx\right)^{1/s}
+\left(\int_\Omega|u|^rdx\right)^{1/s'}\\
+&=
+\|u\|_p^{\theta q}
+\|u\|_r^{(1-\theta)q}.
+\end{aligned}
+$$
+
+两边取 $q$ 次方根即得结论。
+
+### 当 $r=\infty$ 时
+
+指数关系变成
+
+$$
+\frac1q=\frac\theta p,
+\qquad
+\theta=\frac p q.
+$$
+
+于是
+
+$$
+\begin{aligned}
+\|u\|_q^q
+&=\int_\Omega|u|^p|u|^{q-p}\,dx\\
+&\le
+\|u\|_\infty^{q-p}\|u\|_p^p.
+\end{aligned}
+$$
+
+取 $q$ 次方根：
+
+$$
+\|u\|_q
+\le
+\|u\|_p^{p/q}
+\|u\|_\infty^{1-p/q}.
+$$
+
+### 插值与有限测度嵌入的区别
+
+插值定理假设 $u$ 同时属于两个端点空间，不要求 $|\Omega|<\infty$。
+
+而有限测度集合上的包含关系
+
+$$
+L^r(\Omega)\subset L^q(\Omega),
+\qquad q<r,
+$$
+
+依赖于 $|\Omega|<\infty$。两者不能混为一谈。
+
+---
+
+## 2.12 $0<p<1$ 时的反向 Hölder 不等式
+
+设
+
+$$
+0<p<1,
+\qquad
+p'=\frac{p}{p-1}<0.
+$$
+
+形式上仍有
+
+$$
+\frac1p+\frac1{p'}=1,
+$$
+
+但此时 $p'$ 是负数，不再是通常意义下的 $L^{p'}$ 指数。
+
+若 $f\in L^p(\Omega)$ 且
+
+$$
+0<
+\int_\Omega|g(x)|^{p'}dx
+<\infty,
+$$
+
+则
+
+$$
+\boxed{
+\int_\Omega|f(x)g(x)|dx
+\ge
+\left(\int_\Omega|f|^pdx\right)^{1/p}
+\left(\int_\Omega|g|^{p'}dx\right)^{1/p'}.
+}
+$$
+
+因为 $p'<0$，条件意味着 $g\ne0$ 几乎处处，而且 $g$ 不能在过大的区域内太接近零。
+
+### 证明
+
+若 $\int|fg|=\infty$，结论显然。以下假设 $fg\in L^1$。
+
+令
+
+$$
+q=\frac1p>1,
+\qquad
+q'=\frac1{1-p},
+$$
+
+则 $q$ 与 $q'$ 互为共轭指数。再令
+
+$$
+\phi=|g|^{-p},
+\qquad
+\psi=|fg|^p.
+$$
+
+注意
+
+$$
+\phi\psi=|f|^p.
+$$
+
+对 $\phi$ 与 $\psi$ 使用通常的 Hölder 不等式：
+
+$$
+\begin{aligned}
+\int_\Omega|f|^pdx
+&\le
+\left(\int_\Omega\psi^qdx\right)^{1/q}
+\left(\int_\Omega\phi^{q'}dx\right)^{1/q'}\\
+&=
+\left(\int_\Omega|fg|dx\right)^p
+\left(\int_\Omega|g|^{p'}dx\right)^{1-p}.
+\end{aligned}
+$$
+
+两边取 $p$ 次方根并整理。因为
+
+$$
+\frac1{p'}=-\frac{1-p}{p},
+$$
+
+得到
+
+$$
+\int_\Omega|fg|dx
+\ge
+\|f\|_p
+\left(\int_\Omega|g|^{p'}dx\right)^{1/p'}.
+$$
+
+反向不等式并不是凭空出现的；它仍然是把一个普通 Hölder 不等式应用到经过特殊变换的函数上。
+
+---
+
+## 2.13 $0<p<1$ 时的反向 Minkowski 不等式
+
+设 $0<p<1$，$u,v\in L^p(\Omega)$。则
+
+$$
+\boxed{
+\bigl\||u|+|v|\bigr\|_p
+\ge
+\|u\|_p+\|v\|_p.
+}
+$$
+
+### 重要辨析
+
+定理左边是
+
+$$
+\bigl\||u|+|v|\bigr\|_p,
+$$
+
+不是一般的 $\|u+v\|_p$。若 $v=-u\ne0$，则 $\|u+v\|_p=0$，不可能大于 $2\|u\|_p$。
+
+当 $u,v\ge0$ 时，才可以写成
+
+$$
+\|u+v\|_p\ge\|u\|_p+\|v\|_p.
+$$
+
+### 证明
+
+令
+
+$$
+h=|u|+|v|.
+$$
+
+若 $\|h\|_p=0$，结论显然。以下设 $\|h\|_p>0$。
+
+为避免负幂 $h^{p-1}$ 在 $h=0$ 处无定义，令
+
+$$
+E=\{x\in\Omega:h(x)>0\}.
+$$
+
+在 $\Omega\setminus E$ 上有 $u=v=0$，所以所有相关积分均可限制到 $E$。
+
+注意
+
+$$
+\|h\|_p^p
+=\int_E h^pdx
+=\int_E h^{p-1}|u|dx
++\int_E h^{p-1}|v|dx.
+$$
+
+分别对 $(|u|,h^{p-1})$ 和 $(|v|,h^{p-1})$ 使用反向 Hölder 不等式。由于
+
+$$
+(p-1)p'=p,
+$$
+
+有
+
+$$
+\int_E(h^{p-1})^{p'}dx
+=\int_E h^pdx
+=\|h\|_p^p.
+$$
+
+因此
+
+$$
+\int_E h^{p-1}|u|dx
+\ge
+\|u\|_p\|h\|_p^{p/p'},
+$$
+
+以及
+
+$$
+\int_E h^{p-1}|v|dx
+\ge
+\|v\|_p\|h\|_p^{p/p'}.
+$$
+
+相加得到
+
+$$
+\|h\|_p^p
+\ge
+(\|u\|_p+\|v\|_p)\|h\|_p^{p/p'}.
+$$
+
+由于
+
+$$
+\frac p{p'}=p-1,
+$$
+
+约去 $\|h\|_p^{p-1}$，得到
+
+$$
+\|h\|_p\ge\|u\|_p+\|v\|_p.
+$$
+
+即
+
+$$
+\bigl\||u|+|v|\bigr\|_p
+\ge\|u\|_p+\|v\|_p.
+$$
+
+### 与拟三角不等式并不矛盾
+
+对 $0<p<1$，同时成立
+
+$$
+\|u+v\|_p^p
+\le\|u\|_p^p+\|v\|_p^p
+$$
+
+和
+
+$$
+\bigl\||u|+|v|\bigr\|_p
+\ge\|u\|_p+\|v\|_p.
+$$
+
+前者是 $p$ 次幂层面的次可加性，后者是非负函数相加时拟范数本身的超可加性，二者描述的是不同层面。
+
+---
+
+## 3. 常用公式速查
+
+
+### 共轭指数
+
+$$
+\frac1p+\frac1{p'}=1,
+\qquad
+p'=\frac p{p-1}.
+$$
+
+### Young 不等式
+
+$$
+ab\le\frac{a^p}{p}+\frac{b^{p'}}{p'}.
+$$
+
+### Hölder 不等式
+
+$$
+\int_\Omega|uv|
+\le\|u\|_p\|v\|_{p'}.
+$$
+
+### 一般乘积估计
+
+$$
+\frac1p+\frac1q=\frac1r
+\quad\Longrightarrow\quad
+\|uv\|_r\le\|u\|_p\|v\|_q.
+$$
+
+### 对偶刻画
+
+$$
+\|u\|_p
+=
+\sup_{\|v\|_{p'}\le1}
+\left|\int_\Omega u\overline v\,dx\right|.
+$$
+
+### Minkowski 不等式
+
+$$
+\|u+v\|_p\le\|u\|_p+\|v\|_p.
+$$
+
+### 积分型 Minkowski
+
+$$
+\left\|\int f(\cdot,y)\,dy\right\|_p
+\le\int\|f(\cdot,y)\|_p\,dy.
+$$
+
+### 插值不等式
+
+$$
+\frac1q=\frac\theta p+\frac{1-\theta}{r}
+\quad\Longrightarrow\quad
+\|u\|_q\le\|u\|_p^\theta\|u\|_r^{1-\theta}.
+$$
+
+### $0<p<1$ 的反向 Minkowski
+
+$$
+\bigl\||u|+|v|\bigr\|_p
+\ge\|u\|_p+\|v\|_p.
+$$
+
