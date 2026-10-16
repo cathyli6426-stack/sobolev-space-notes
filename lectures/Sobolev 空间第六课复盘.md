@@ -1,0 +1,1467 @@
+# 第六课复盘：$L^p$ 空间的结构、稠密性、卷积与 Young 定理
+
+> 教材范围：2.14—2.24
+> 本节主线：有限测度嵌入 $\longrightarrow$ 局部可积性 $\longrightarrow$ 完备性 $\longrightarrow$ 稠密性与可分性 $\longrightarrow$ 卷积 $\longrightarrow$ Young 定理。
+
+## 0. 本节课的整体逻辑
+
+前一节建立了 Hölder、Minkowski 与插值不等式。本节利用这些工具研究 $L^p$ 空间本身的结构，并开始讨论卷积。
+
+可以把知识链条概括为
+
+$$
+\begin{aligned}
+\text{Hölder}
+&\Longrightarrow
+\text{有限测度空间上的 }L^q\hookrightarrow L^p\\
+&\Longrightarrow
+L^p(\Omega)\subset L^1_{\mathrm{loc}}(\Omega),\\[4pt]
+\text{Minkowski}+\text{测度收敛定理}
+&\Longrightarrow
+L^p\text{ 的完备性},\\[4pt]
+\text{简单函数逼近}+\text{Lusin/测度正则性}
+&\Longrightarrow
+C_c(\Omega)\text{ 在 }L^p\text{ 中稠密}\\
+&\Longrightarrow
+L^p\text{ 在 }p<\infty\text{ 时可分},\\[4pt]
+\text{平移不变性}+\text{Hölder}
+&\Longrightarrow
+\text{卷积的有界性与一致连续性},\\[4pt]
+\text{三函数 Hölder}
+&\Longrightarrow
+\text{Young 卷积定理}.
+\end{aligned}
+$$
+
+---
+
+## 2.14 有限测度区域上的 $L^p$ 嵌入
+
+设
+
+$$
+|\Omega|:=\int_\Omega1\,dx<\infty,
+$$
+
+并且
+
+$$
+1\le p\le q\le\infty.
+$$
+
+### 2.14.1 基本嵌入
+
+若 $u\in L^q(\Omega)$，则 $u\in L^p(\Omega)$，且
+
+$$
+\boxed{
+\|u\|_p
+\le
+|\Omega|^{\,1/p-1/q}\|u\|_q.
+}
+$$
+
+因此
+
+$$
+\boxed{L^q(\Omega)\hookrightarrow L^p(\Omega).}
+$$
+
+这里的箭头表示连续嵌入：不仅集合上有包含关系，而且包含映射满足范数估计。
+
+### 2.14.2 证明
+
+若 $p=q$，结论显然。先设
+
+$$
+1\le p<q<\infty.
+$$
+
+写成
+
+$$
+\int_\Omega|u|^pdx
+=
+\int_\Omega |u|^p\cdot1\,dx.
+$$
+
+对右侧使用 Hölder 不等式，共轭指数取
+
+$$
+\frac q p
+\quad\text{和}\quad
+\frac q{q-p}.
+$$
+
+于是
+
+$$
+\begin{aligned}
+\int_\Omega|u|^pdx
+&\le
+\left(\int_\Omega|u|^qdx\right)^{p/q}
+\left(\int_\Omega1\,dx\right)^{1-p/q}\\
+&=
+\|u\|_q^p|\Omega|^{1-p/q}.
+\end{aligned}
+$$
+
+两边取 $p$ 次方根：
+
+$$
+\|u\|_p
+\le
+|\Omega|^{1/p-1/q}\|u\|_q.
+$$
+
+当 $q=\infty$ 时，
+
+$$
+|u(x)|\le\|u\|_\infty
+\quad\text{几乎处处},
+$$
+
+所以
+
+$$
+\|u\|_p^p
+\le
+\|u\|_\infty^p|\Omega|,
+$$
+
+即
+
+$$
+\|u\|_p
+\le
+|\Omega|^{1/p}\|u\|_\infty.
+$$
+
+### 2.14.3 为什么必须假设 $|\Omega|<\infty$
+
+在无限测度区域上，$q>p$ 并不自动推出 $L^q\subset L^p$。
+
+例如常函数
+
+$$
+u(x)\equiv1
+\quad\text{于 }\mathbb R^n
+$$
+
+属于 $L^\infty(\mathbb R^n)$，但不属于任何有限指数的 $L^p(\mathbb R^n)$。
+
+所以
+
+$$
+q>p
+\quad\not\Longrightarrow\quad
+L^q(\Omega)\subset L^p(\Omega)
+$$
+
+除非再加入有限测度等条件。
+
+### 2.14.4 当 $p\to\infty$ 时的极限
+
+若 $|\Omega|<\infty$ 且 $u\in L^\infty(\Omega)$，则
+
+$$
+\boxed{
+\lim_{p\to\infty}\|u\|_p=\|u\|_\infty.
+}
+$$
+
+#### 上极限估计
+
+由前面的嵌入估计，
+
+$$
+\|u\|_p
+\le
+|\Omega|^{1/p}\|u\|_\infty.
+$$
+
+因为
+
+$$
+|\Omega|^{1/p}\longrightarrow1,
+$$
+
+所以
+
+$$
+\limsup_{p\to\infty}\|u\|_p
+\le\|u\|_\infty.
+$$
+
+#### 下极限估计
+
+任取 $\varepsilon>0$。由本性上确界的定义，集合
+
+$$
+A_\varepsilon
+=
+\left\{
+x\in\Omega:
+|u(x)|>\|u\|_\infty-\varepsilon
+\right\}
+$$
+
+具有正测度。于是
+
+$$
+\begin{aligned}
+\|u\|_p^p
+&=
+\int_\Omega|u|^pdx\\
+&\ge
+\int_{A_\varepsilon}|u|^pdx\\
+&\ge
+|A_\varepsilon|
+(\|u\|_\infty-\varepsilon)^p.
+\end{aligned}
+$$
+
+因此
+
+$$
+\|u\|_p
+\ge
+|A_\varepsilon|^{1/p}
+(\|u\|_\infty-\varepsilon).
+$$
+
+令 $p\to\infty$，得到
+
+$$
+\liminf_{p\to\infty}\|u\|_p
+\ge
+\|u\|_\infty-\varepsilon.
+$$
+
+再令 $\varepsilon\downarrow0$，便有
+
+$$
+\liminf_{p\to\infty}\|u\|_p
+\ge\|u\|_\infty.
+$$
+
+结合上、下极限即得结论。
+
+### 2.14.5 反过来：一致的 $L^p$ 控制推出 $L^\infty$
+
+设 $u\in L^p(\Omega)$ 对所有 $1\le p<\infty$ 都成立，并且存在同一个常数 $K$，使
+
+$$
+\|u\|_p\le K
+\qquad\forall\,1\le p<\infty.
+$$
+
+则
+
+$$
+\boxed{
+u\in L^\infty(\Omega),
+\qquad
+\|u\|_\infty\le K.
+}
+$$
+
+反证。若结论不成立，则存在 $K_1>K$ 和正测度集合 $A\subset\Omega$，使
+
+$$
+|u(x)|\ge K_1
+\qquad x\in A.
+$$
+
+于是
+
+$$
+\|u\|_p
+\ge
+K_1|A|^{1/p}.
+$$
+
+令 $p\to\infty$，得到
+
+$$
+\liminf_{p\to\infty}\|u\|_p\ge K_1>K,
+$$
+
+与 $\|u\|_p\le K$ 矛盾。
+
+### 2.14.6 重要反例：属于所有有限 $L^p$，仍可能不属于 $L^\infty$
+
+“对每个有限 $p$ 都有 $u\in L^p$”并不足以推出 $u\in L^\infty$；关键是 $\|u\|_p$ 是否被同一个常数一致控制。
+
+取
+
+$$
+u(x)=|\ln x|,
+\qquad x\in(0,1).
+$$
+
+对任意有限 $p>0$，令 $t=-\ln x$，得到
+
+$$
+\int_0^1|\ln x|^pdx
+=
+\int_0^\infty t^pe^{-t}dt
+=
+\Gamma(p+1)
+<\infty.
+$$
+
+所以
+
+$$
+u\in L^p(0,1)
+\qquad\forall p<\infty.
+$$
+
+但 $u(x)\to\infty$ 当 $x\downarrow0$，故
+
+$$
+u\notin L^\infty(0,1).
+$$
+
+事实上由 Stirling 公式，
+
+$$
+\|u\|_p
+=
+\Gamma(p+1)^{1/p}
+\sim\frac p e
+\longrightarrow\infty.
+$$
+
+因此它不满足一致有界条件。
+
+---
+
+## 2.15 $L^p(\Omega)$ 函数都是局部可积的
+
+对任意区域 $\Omega$ 和
+
+$$
+1\le p\le\infty,
+$$
+
+都有
+
+$$
+\boxed{
+L^p(\Omega)\subset L^1_{\mathrm{loc}}(\Omega).
+}
+$$
+
+### 证明
+
+任取紧集 $K\Subset\Omega$。因为 $K$ 有限测度：
+
+- 若 $1<p<\infty$，由 Hölder 不等式，
+  
+  $$
+  \int_K|u|dx
+  \le
+  |K|^{1-1/p}\|u\|_{L^p(K)}
+  \le
+  |K|^{1-1/p}\|u\|_{L^p(\Omega)};
+  $$
+- 若 $p=1$，结论直接成立；
+- 若 $p=\infty$，
+  
+  $$
+  \int_K|u|dx
+  \le
+  |K|\|u\|_\infty.
+  $$
+
+所以 $u$ 在每个 $K\Subset\Omega$ 上可积，即
+
+$$
+u\in L^1_{\mathrm{loc}}(\Omega).
+$$
+
+这条结论把本章与上一章的分布理论连接起来：每个 $L^p$ 函数都能自然诱导一个正则分布。
+
+---
+
+## 2.16 $L^p(\Omega)$ 的完备性
+
+### 定理
+
+若
+
+$$
+1\le p\le\infty,
+$$
+
+则 $L^p(\Omega)$ 是 Banach 空间。
+
+也就是说，每个 $L^p$-Cauchy 列都在 $L^p$ 范数下收敛到某个 $L^p$ 函数。
+
+### 2.16.1 有限指数情形：$1\le p<\infty$
+
+设 $\{u_n\}$ 是 $L^p(\Omega)$ 中的 Cauchy 列。
+
+#### 第一步：抽取“差分可求和”的子列
+
+因为 $\{u_n\}$ 是 Cauchy 列，可以选取子列 $\{u_{n_j}\}$，使
+
+$$
+\|u_{n_{j+1}}-u_{n_j}\|_p
+\le2^{-j},
+\qquad j=1,2,\ldots.
+$$
+
+定义
+
+$$
+v_m(x)
+:=
+\sum_{j=1}^m
+|u_{n_{j+1}}(x)-u_{n_j}(x)|.
+$$
+
+由 Minkowski 不等式，
+
+$$
+\|v_m\|_p
+\le
+\sum_{j=1}^m
+\|u_{n_{j+1}}-u_{n_j}\|_p
+\le
+\sum_{j=1}^\infty2^{-j}
+=1.
+$$
+
+#### 第二步：得到几乎处处收敛
+
+$v_m$ 单调递增。令
+
+$$
+v(x)=\lim_{m\to\infty}v_m(x)
+\in[0,\infty].
+$$
+
+由单调收敛定理，
+
+$$
+\begin{aligned}
+\int_\Omega v(x)^pdx
+&=
+\lim_{m\to\infty}
+\int_\Omega v_m(x)^pdx\\
+&\le1.
+\end{aligned}
+$$
+
+所以
+
+$$
+v(x)<\infty
+\quad\text{几乎处处}.
+$$
+
+因此级数
+
+$$
+\sum_{j=1}^\infty
+\bigl(u_{n_{j+1}}(x)-u_{n_j}(x)\bigr)
+$$
+
+几乎处处绝对收敛。定义
+
+$$
+u(x)
+:=
+u_{n_1}(x)
++
+\sum_{j=1}^\infty
+\bigl(u_{n_{j+1}}(x)-u_{n_j}(x)\bigr)
+$$
+
+于收敛点，并在其余零测集上令 $u=0$。因为部分和望远镜相消，
+
+$$
+u_{n_j}(x)\longrightarrow u(x)
+\quad\text{几乎处处}.
+$$
+
+#### 第三步：用 Fatou 引理回到范数收敛
+
+给定 $\varepsilon>0$。由原序列是 Cauchy 列，存在 $N$，使得
+
+$$
+\|u_m-u_n\|_p<\varepsilon
+\qquad(m,n\ge N).
+$$
+
+固定 $n\ge N$，并令 $j\to\infty$。对非负函数
+
+$$
+|u_{n_j}-u_n|^p
+$$
+
+使用 Fatou 引理：
+
+$$
+\begin{aligned}
+\|u-u_n\|_p^p
+&=
+\int_\Omega
+\liminf_{j\to\infty}
+|u_{n_j}-u_n|^pdx\\
+&\le
+\liminf_{j\to\infty}
+\int_\Omega
+|u_{n_j}-u_n|^pdx\\
+&\le
+\varepsilon^p.
+\end{aligned}
+$$
+
+因此
+
+$$
+\|u-u_n\|_p\le\varepsilon
+\qquad(n\ge N).
+$$
+
+所以
+
+$$
+u_n\longrightarrow u
+\quad\text{于 }L^p(\Omega).
+$$
+
+这同时证明 $u\in L^p(\Omega)$。
+
+### 2.16.2 $p=\infty$ 的情形
+
+设 $\{u_n\}$ 在 $L^\infty(\Omega)$ 中是 Cauchy 列。对每一对 $m,n$，不等式
+
+$$
+|u_n(x)-u_m(x)|
+\le
+\|u_n-u_m\|_\infty
+$$
+
+在某个零测集之外成立。因为只涉及可数多个 $(m,n)$，可把这些零测集取并，得到一个统一的零测集 $A$，使上述不等式对所有 $x\in\Omega\setminus A$ 和所有 $m,n$ 同时成立。
+
+于是 $\{u_n\}$ 在 $\Omega\setminus A$ 上一致 Cauchy，从而一致收敛到某个函数 $u$。在 $A$ 上令 $u=0$，则
+
+$$
+u\in L^\infty(\Omega)
+$$
+
+且
+
+$$
+\|u_n-u\|_\infty\longrightarrow0.
+$$
+
+故 $L^\infty(\Omega)$ 也是 Banach 空间。
+
+### 完备性证明的核心结构
+
+这份证明必须区分三种收敛：
+
+1. 从 Cauchy 性抽子列，使相邻差的范数可求和；
+2. 借助单调收敛定理，得到子列几乎处处收敛；
+3. 借助 Fatou 引理，把几乎处处收敛升级回整个序列的 $L^p$ 范数收敛。
+
+不能仅由“子列几乎处处收敛”直接断言原序列范数收敛。
+
+---
+
+## 2.17 Cauchy 列存在几乎处处收敛子列
+
+由 2.16 的证明立即得到：
+
+> 若 $1\le p\le\infty$，则 $L^p(\Omega)$ 中每个 Cauchy 列都存在一个几乎处处逐点收敛的子列。
+
+特别地，若
+
+$$
+u_n\longrightarrow u
+\quad\text{于 }L^p(\Omega),
+$$
+
+则可以从 $\{u_n\}$ 中抽取子列 $\{u_{n_j}\}$，使
+
+$$
+u_{n_j}(x)\longrightarrow u(x)
+\quad\text{几乎处处}.
+$$
+
+注意：整个序列未必逐点收敛；结论只保证存在子列。
+
+---
+
+## 2.18 $L^2(\Omega)$ 是 Hilbert 空间
+
+在复值函数情形定义内积
+
+$$
+(u,v)
+:=
+\int_\Omega
+u(x)\overline{v(x)}\,dx.
+$$
+
+在实值函数情形可以去掉复共轭。
+
+该内积诱导的范数为
+
+$$
+\sqrt{(u,u)}
+=
+\left(\int_\Omega|u|^2dx\right)^{1/2}
+=\|u\|_2.
+$$
+
+由 2.16，$L^2(\Omega)$ 在这个范数下完备，因此
+
+$$
+\boxed{L^2(\Omega)\text{ 是 Hilbert 空间}.}
+$$
+
+Hölder 不等式在 $p=p'=2$ 时正是 Cauchy–Schwarz 不等式：
+
+$$
+|(u,v)|
+\le
+\|u\|_2\|v\|_2.
+$$
+
+---
+
+## 2.19 连续紧支撑函数在 $L^p$ 中稠密
+
+以下记
+
+$$
+C_0(\Omega)=C_c(\Omega),
+$$
+
+即 $\Omega$ 上连续且紧支撑的函数空间。
+
+### 定理
+
+若
+
+$$
+1\le p<\infty,
+$$
+
+则
+
+$$
+\boxed{
+\overline{C_c(\Omega)}^{\,\|\cdot\|_p}
+=L^p(\Omega).
+}
+$$
+
+也就是说，对任意 $u\in L^p(\Omega)$ 和 $\varepsilon>0$，存在 $\varphi\in C_c(\Omega)$，使
+
+$$
+\|u-\varphi\|_p<\varepsilon.
+$$
+
+### 2.19.1 第一步：先用简单函数逼近
+
+复值函数可分成四个非负实函数的线性组合，因此只需考虑 $u\ge0$。
+
+存在非负简单函数序列 $\{s_n\}$，满足
+
+$$
+0\le s_n\uparrow u
+\quad\text{逐点}.
+$$
+
+并且
+
+$$
+|u-s_n|^p\le|u|^p\in L^1(\Omega).
+$$
+
+由控制收敛定理，
+
+$$
+\|u-s_n\|_p\longrightarrow0.
+$$
+
+所以可选一个简单函数 $s$，使
+
+$$
+\|u-s\|_p<\frac\varepsilon2.
+$$
+
+### 2.19.2 第二步：把简单函数逼近为连续紧支撑函数
+
+可将 $s$ 写成
+
+$$
+s=\sum_{k=1}^N a_k\chi_{E_k},
+$$
+
+其中相关集合可取为有限测度集合。
+
+对每个 $E_k$，利用 Lebesgue 测度的正则性：
+
+1. 先用相对紧的部分截断，使丢掉的测度很小；
+2. 取紧集 $K_k\subset E_k$ 与开集 $G_k\Subset\Omega$，满足
+   
+   $$
+   K_k\subset G_k,
+   \qquad
+   |G_k\setminus K_k|\text{ 足够小};
+   $$
+3. 构造 $\varphi_k\in C_c(\Omega)$，使
+   
+   $$
+   0\le\varphi_k\le1,
+   \qquad
+   \varphi_k=1\text{ 于 }K_k,
+   \qquad
+   \mathrm{supp}\,\varphi_k\subset G_k.
+   $$
+
+令
+
+$$
+\varphi=\sum_{k=1}^N a_k\varphi_k.
+$$
+
+则 $\varphi\in C_c(\Omega)$。通过把 $|G_k\setminus K_k|$ 取得充分小，可使
+
+$$
+\|s-\varphi\|_p<\frac\varepsilon2.
+$$
+
+因此
+
+$$
+\|u-\varphi\|_p
+\le
+\|u-s\|_p+\|s-\varphi\|_p
+<\varepsilon.
+$$
+
+这就是连续紧支撑函数稠密性的基本机制：
+
+$$
+L^p\text{ 函数}
+\longrightarrow
+\text{简单函数}
+\longrightarrow
+C_c\text{ 函数}.
+$$
+
+### 教材中的 Lusin 路线
+
+教材使用 Lusin 定理把有限支撑的简单函数改成连续函数，使二者只在一个很小的集合上不同。若
+
+$$
+|s-\varphi|\le 2\|s\|_\infty
+$$
+
+且不相等集合的测度足够小，则
+
+$$
+\|s-\varphi\|_p
+\le
+2\|s\|_\infty
+|\{s\ne\varphi\}|^{1/p},
+$$
+
+从而同样得到 $L^p$ 逼近。
+
+### 为什么排除 $p=\infty$
+
+$C_c(\Omega)$ 一般不在 $L^\infty(\Omega)$ 中稠密。原因是 $L^\infty$ 范数要求除零测集外处处一致接近，不能仅靠让“误差集合的测度很小”来减小范数。
+
+---
+
+## 2.20 简单函数的稠密性
+
+简单函数在 $L^p(\Omega)$ 中稠密：
+
+$$
+\boxed{
+\overline{\{\text{简单函数}\}}^{\,\|\cdot\|_p}
+=L^p(\Omega),
+\qquad1\le p\le\infty.
+}
+$$
+
+### 当 $1\le p<\infty$
+
+使用单调简单函数逼近和控制收敛定理即可。
+
+### 当 $p=\infty$
+
+若 $u$ 本性有界，可以把其值域划分成长度为 $2^{-m}$ 的小区间，并把 $u$ 在每个区间内的值替换成一个端点，得到简单函数 $s_m$，满足
+
+$$
+\|u-s_m\|_\infty\le2^{-m}.
+$$
+
+因此简单函数在 $L^\infty$ 中仍然稠密。
+
+注意这不与 2.19 矛盾：简单函数可以有跳跃，而连续函数无法在本性上确界范数下逼近一般跳跃函数。
+
+---
+
+## 2.21 $L^p$ 的可分性
+
+### 定理
+
+若
+
+$$
+1\le p<\infty,
+$$
+
+则 $L^p(\Omega)$ 是可分的；而一般的 $L^\infty(\Omega)$ 不可分。
+
+可分的含义是：存在一个可数子集在范数意义下稠密。
+
+### 2.21.1 有限 $p$ 时的证明思路
+
+取紧集穷竭
+
+$$
+\Omega_m
+:=
+\left\{
+x\in\Omega:
+|x|\le m,\ 
+\mathrm{dist}(x,\partial\Omega)\ge\frac1m
+\right\}.
+$$
+
+则
+
+$$
+\Omega_m\Subset\Omega,
+\qquad
+\bigcup_{m=1}^\infty\Omega_m=\Omega.
+$$
+
+令 $\mathcal P$ 为所有具有有理复系数的多项式集合。$\mathcal P$ 是可数的。对每个 $m$，令
+
+$$
+\mathcal P_m
+:=
+\{\chi_{\Omega_m}P:P\in\mathcal P\}.
+$$
+
+于是
+
+$$
+\bigcup_{m=1}^\infty\mathcal P_m
+$$
+
+仍是可数集。
+
+由 2.19，给定 $u\in L^p(\Omega)$ 与 $\varepsilon>0$，可以先取 $\varphi\in C_c(\Omega)$，使
+
+$$
+\|u-\varphi\|_p<\frac\varepsilon2.
+$$
+
+再取充分大的 $m$，使 $\mathrm{supp}\,\varphi\subset\Omega_m$。由 Stone–Weierstrass 定理，可以用有理复系数多项式 $P$ 在 $\Omega_m$ 上一致逼近 $\varphi$，使
+
+$$
+\|\varphi-\chi_{\Omega_m}P\|_\infty
+<
+\frac{\varepsilon}
+{2|\Omega_m|^{1/p}}.
+$$
+
+于是
+
+$$
+\|\varphi-\chi_{\Omega_m}P\|_p
+\le
+|\Omega_m|^{1/p}
+\|\varphi-\chi_{\Omega_m}P\|_\infty
+<\frac\varepsilon2.
+$$
+
+所以
+
+$$
+\|u-\chi_{\Omega_m}P\|_p<\varepsilon.
+$$
+
+因此上述可数集合在 $L^p(\Omega)$ 中稠密。
+
+### 2.21.2 为什么 $L^\infty$ 一般不可分
+
+设 $\Omega$ 是非空区域。可在 $\Omega$ 内选择两两不交、测度为正的可测集合
+
+$$
+E_1,E_2,\ldots.
+$$
+
+对每个子集 $A\subset\mathbb N$，定义
+
+$$
+f_A
+:=
+\sum_{k\in A}\chi_{E_k}.
+$$
+
+若 $A\ne B$，则至少存在一个 $k$ 属于二者的对称差，从而
+
+$$
+\|f_A-f_B\|_\infty=1.
+$$
+
+$\mathbb N$ 的子集有不可数多个，所以 $L^\infty(\Omega)$ 中存在不可数个两两距离为 $1$ 的元素。
+
+如果 $L^\infty$ 有可数稠密集，那么半径小于 $1/2$ 的球必须覆盖这些元素，但每个这样的球至多包含其中一个元素，产生矛盾。因此 $L^\infty(\Omega)$ 不可分。
+
+---
+
+## 2.22 为什么连续函数在 $L^\infty$ 中不稠密
+
+设
+
+$$
+C_B^0(\Omega)
+:=
+\{u\in C(\Omega):u\text{ 有界}\}.
+$$
+
+它是 $L^\infty(\Omega)$ 的真闭子空间。
+
+### 闭性
+
+若 $u_j\in C_B^0(\Omega)$ 且
+
+$$
+\|u_j-u\|_\infty\longrightarrow0,
+$$
+
+则 $\{u_j\}$ 在本性上确界范数下是 Cauchy 列。
+
+对连续函数 $f$，在区域 $\Omega$ 上有
+
+$$
+\|f\|_\infty
+=
+\sup_{x\in\Omega}|f(x)|.
+$$
+
+原因是：若连续函数在某点超过某个高度，它会在该点的一个小邻域内仍超过该高度，而开集具有正测度。因此连续函数的普通上确界与本性上确界一致。
+
+所以 $\{u_j\}$ 实际上是一致 Cauchy 列，其一致极限具有连续代表元。故 $C_B^0(\Omega)$ 在 $L^\infty$ 中闭。
+
+### 真子空间
+
+取一个具有真实跳跃的特征函数，例如在包含原点邻域的区域上令
+
+$$
+u(x)=\chi_{\{x_1>0\}}(x).
+$$
+
+它不能在 $L^\infty$ 范数下被连续函数任意逼近，因为在跳跃面两侧必须分别接近 $0$ 和 $1$，连续性迫使中间出现至少约 $1/2$ 的误差。
+
+因此
+
+$$
+C_B^0(\Omega)
+\subsetneq
+L^\infty(\Omega)
+$$
+
+且不稠密。于是它的子空间 $C_c(\Omega)$ 和 $C_c^\infty(\Omega)$ 也不可能在 $L^\infty$ 中稠密。
+
+---
+
+## 2.23 卷积
+
+设 $u,v$ 是 $\mathbb R^n$ 上的函数。若积分有意义，定义卷积
+
+$$
+\boxed{
+(u*v)(x)
+:=
+\int_{\mathbb R^n}
+u(x-y)v(y)\,dy.
+}
+$$
+
+卷积不是逐点乘积。它把 $v(y)$ 看作权重，对 $u$ 的平移 $u(x-y)$ 进行平均，因此具有平滑作用。
+
+### 2.23.1 共轭指数情形下的绝对收敛与有界性
+
+设
+
+$$
+1\le p\le\infty,
+\qquad
+\frac1p+\frac1{p'}=1,
+$$
+
+并且
+
+$$
+u\in L^p(\mathbb R^n),
+\qquad
+v\in L^{p'}(\mathbb R^n).
+$$
+
+对每个固定的 $x$，由 Hölder 不等式，
+
+$$
+\begin{aligned}
+|(u*v)(x)|
+&\le
+\int_{\mathbb R^n}
+|u(x-y)||v(y)|\,dy\\
+&\le
+\|u(x-\cdot)\|_p
+\|v\|_{p'}.
+\end{aligned}
+$$
+
+Lebesgue 测度在平移下不变，所以
+
+$$
+\|u(x-\cdot)\|_p=\|u\|_p.
+$$
+
+因此
+
+$$
+\boxed{
+\|u*v\|_\infty
+\le
+\|u\|_p\|v\|_{p'}.
+}
+$$
+
+特别地，卷积积分绝对收敛，并产生一个有界函数。
+
+### 2.23.2 交换律
+
+作变量替换
+
+$$
+z=x-y,
+$$
+
+得到
+
+$$
+\begin{aligned}
+(u*v)(x)
+&=
+\int_{\mathbb R^n}u(x-y)v(y)\,dy\\
+&=
+\int_{\mathbb R^n}u(z)v(x-z)\,dz\\
+&=(v*u)(x).
+\end{aligned}
+$$
+
+所以
+
+$$
+\boxed{u*v=v*u.}
+$$
+
+### 2.23.3 一致连续性
+
+若 $1\le p<\infty$，则 $L^p$ 中的平移连续：
+
+$$
+\|\tau_hu-u\|_p\longrightarrow0
+\qquad(h\to0),
+$$
+
+其中
+
+$$
+(\tau_hu)(x)=u(x+h).
+$$
+
+于是
+
+$$
+\begin{aligned}
+|(u*v)(x+h)-(u*v)(x)|
+&\le
+\int_{\mathbb R^n}
+|u(x+h-y)-u(x-y)||v(y)|\,dy\\
+&\le
+\|\tau_hu-u\|_p\|v\|_{p'}.
+\end{aligned}
+$$
+
+右端与 $x$ 无关且当 $h\to0$ 时趋于零，所以 $u*v$ 一致连续。
+
+当 $p=\infty$、$p'=1$ 时，利用交换律写成 $v*u$，再使用 $L^1$ 中平移的连续性，仍可得到一致连续性。
+
+因此在共轭指数条件下，
+
+$$
+\boxed{
+u*v\in C_B(\mathbb R^n),
+}
+$$
+
+即卷积是有界且一致连续的函数。
+
+### 为什么卷积会平滑
+
+点态乘积 $u(x)v(x)$ 会叠加两者在同一点的奇异性；卷积则把一个函数相对于另一个函数进行平移平均。若其中一个因子进一步具有光滑性和可积导数，通常可以把导数移到该因子上：
+
+$$
+D^\alpha(u*v)
+=u*D^\alpha v.
+$$
+
+这正是后面使用磨光核逼近函数的基础。
+
+---
+
+## 2.24 Young 定理：卷积的三线性估计
+
+### 2.24.1 定理陈述
+
+设
+
+$$
+p,q,r\ge1
+$$
+
+并满足
+
+$$
+\frac1p+\frac1q+\frac1r=2.
+$$
+
+若
+
+$$
+u\in L^p(\mathbb R^n),
+\qquad
+v\in L^q(\mathbb R^n),
+\qquad
+w\in L^r(\mathbb R^n),
+$$
+
+则
+
+$$
+\boxed{
+\left|
+\int_{\mathbb R^n}
+(u*v)(x)w(x)\,dx
+\right|
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+}
+$$
+
+这可以看成卷积与 $w$ 配对后的三线性估计。
+
+指数条件也可以写成
+
+$$
+\frac1{p'}+\frac1{q'}+\frac1{r'}=1,
+$$
+
+因为
+
+$$
+\frac1{p'}+\frac1{q'}+\frac1{r'}
+=
+3-\left(\frac1p+\frac1q+\frac1r\right)
+=1.
+$$
+
+### 2.24.2 证明的核心：把被积函数拆成三个 Hölder 因子
+
+先考虑 $1<p,q,r<\infty$，并暂时令 $u\in C_c(\mathbb R^n)$，从而相关可测性和 Fubini 交换可以直接处理。
+
+由卷积定义，
+
+$$
+\begin{aligned}
+\left|
+\int_{\mathbb R^n}(u*v)(x)w(x)\,dx
+\right|
+&\le
+\int_{\mathbb R^n}
+\int_{\mathbb R^n}
+|u(x-y)v(y)w(x)|\,dydx.
+\end{aligned}
+$$
+
+定义 $\mathbb R^{2n}$ 上的三个函数
+
+$$
+U(x,y)
+:=
+|v(y)|^{q/p'}
+|w(x)|^{r/p'},
+$$
+
+$$
+V(x,y)
+:=
+|u(x-y)|^{p/q'}
+|w(x)|^{r/q'},
+$$
+
+$$
+W(x,y)
+:=
+|u(x-y)|^{p/r'}
+|v(y)|^{q/r'}.
+$$
+
+由于
+
+$$
+\frac1{q'}+\frac1{r'}=\frac1p,
+$$
+
+$u$ 在 $VW$ 中的总指数是
+
+$$
+\frac p{q'}+\frac p{r'}=1.
+$$
+
+同理，$v$ 与 $w$ 的总指数也都是 $1$。所以
+
+$$
+UVW
+=
+|u(x-y)v(y)w(x)|.
+$$
+
+对 $U,V,W$ 使用三函数 Hölder 不等式，指数为 $p',q',r'$：
+
+$$
+\iint_{\mathbb R^{2n}}UVW
+\le
+\|U\|_{p'}\|V\|_{q'}\|W\|_{r'}.
+$$
+
+### 2.24.3 计算三个范数
+
+先计算 $U$：
+
+$$
+\begin{aligned}
+\|U\|_{p'}^{p'}
+&=
+\iint
+|v(y)|^q|w(x)|^r\,dydx\\
+&=
+\|v\|_q^q\|w\|_r^r.
+\end{aligned}
+$$
+
+所以
+
+$$
+\|U\|_{p'}
+=
+\|v\|_q^{q/p'}
+\|w\|_r^{r/p'}.
+$$
+
+再计算 $V$。利用变量替换 $z=x-y$，
+
+$$
+\begin{aligned}
+\|V\|_{q'}^{q'}
+&=
+\iint
+|u(x-y)|^p|w(x)|^r\,dydx\\
+&=
+\|u\|_p^p\|w\|_r^r,
+\end{aligned}
+$$
+
+故
+
+$$
+\|V\|_{q'}
+=
+\|u\|_p^{p/q'}
+\|w\|_r^{r/q'}.
+$$
+
+同理，
+
+$$
+\|W\|_{r'}
+=
+\|u\|_p^{p/r'}
+\|v\|_q^{q/r'}.
+$$
+
+三者相乘。$\|u\|_p$ 的总指数为
+
+$$
+\frac p{q'}+\frac p{r'}=1,
+$$
+
+$\|v\|_q$、$\|w\|_r$ 的总指数也分别为 $1$。因此
+
+$$
+\|U\|_{p'}\|V\|_{q'}\|W\|_{r'}
+=
+\|u\|_p\|v\|_q\|w\|_r.
+$$
+
+最终得到
+
+$$
+\left|
+\int_{\mathbb R^n}(u*v)w
+\right|
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+$$
+
+### 2.24.4 一般函数为什么仍然成立
+
+上面的分解证明先在一个容易保证可测性与积分交换的稠密子空间中完成。对于有限指数：
+
+1. 由 2.19，$C_c(\mathbb R^n)$ 在 $L^p(\mathbb R^n)$ 中稠密；
+2. 由已经得到的范数估计，卷积所对应的算子在这个稠密子空间上一致有界；
+3. 有界算子可以唯一连续延拓到整个 $L^p$ 空间；
+4. 再用简单函数逼近、几乎处处收敛或单调收敛，把延拓得到的对象与原卷积积分识别。
+
+端点指数等情形可直接用 Hölder、Fubini–Tonelli 与
+
+$$
+\|u*v\|_\infty
+\le
+\|u\|_p\|v\|_{p'}
+$$
+
+处理。
+
+因此定理对所陈述的全部指数成立。
+
+### 2.24.5 与下一步 Young 卷积不等式的关系
+
+2.24 给出的是三线性形式：
+
+$$
+\left|\int(u*v)w\right|
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+$$
+
+结合 $L^s$ 范数的对偶刻画，可以把 $w$ 取遍单位球，从而得到卷积的范数形式
+
+$$
+\|u*v\|_s
+\le
+\|u\|_p\|v\|_q,
+$$
+
+其中
+
+$$
+\frac1p+\frac1q
+=
+1+\frac1s.
+$$
+
+这就是下一条推论中的 Young 卷积不等式。也就是说：
+
+$$
+\text{三线性 Young 定理}
++\text{对偶公式}
+\Longrightarrow
+\text{卷积的 }L^p\text{--}L^q\text{ 范数估计}.
+$$
+
+---
+
+## 3. 容易混淆的结论对照
+
+### 3.1 有限测度嵌入与插值不是同一件事
+
+有限测度嵌入：
+
+$$
+|\Omega|<\infty,\ q\ge p
+\quad\Longrightarrow\quad
+L^q(\Omega)\hookrightarrow L^p(\Omega).
+$$
+
+插值：
+
+$$
+u\in L^p\cap L^r
+\quad\Longrightarrow\quad
+u\in L^q
+$$
+
+其中 $1/q$ 位于 $1/p$ 与 $1/r$ 之间。插值不要求区域有限测度，但要求同一个函数同时属于两个端点空间。
+
+### 3.2 简单函数稠密与连续函数稠密
+
+- 简单函数在 $L^p$ 中对所有 $1\le p\le\infty$ 都稠密；
+- $C_c(\Omega)$ 只在 $1\le p<\infty$ 时稠密；
+- $C_c(\Omega)$ 一般不在 $L^\infty$ 中稠密。
+
+### 3.3 范数收敛与几乎处处收敛
+
+- $L^p$ 范数收敛不必推出整个序列几乎处处收敛；
+- 范数收敛可以抽出几乎处处收敛子列；
+- 几乎处处收敛本身也不必推出范数收敛，还需要控制收敛、Fatou 等额外工具。
+
+### 3.4 点态乘积与卷积
+
+点态乘积：
+
+$$
+(uv)(x)=u(x)v(x).
+$$
+
+卷积：
+
+$$
+(u*v)(x)
+=
+\int u(x-y)v(y)\,dy.
+$$
+
+点态乘积的指数关系来自 Hölder；卷积的指数关系来自 Young 定理。两者不能混用。
+
+---
+
+## 4. 核心结论速查
+
+| 编号 | 结论 |
+|---|---|
+| 2.14 | 若 $\|\Omega\|<\infty $ 且 $p\le q$，则 $L^q(\Omega)\hookrightarrow L^p(\Omega)$ |
+| 2.14 | 若 $u\in L^\infty$，则 $\|u\|_p\to\|u\|_\infty$ |
+| 2.14 | 若所有 $\|u\|_p$ 被同一常数控制，则 $u\in L^\infty$ |
+| 2.15 | $L^p(\Omega)\subset L^1_{\mathrm{loc}}(\Omega)$ |
+| 2.16 | $L^p(\Omega)$ 在 $1\le p\le\infty$ 时是 Banach 空间 |
+| 2.17 | $L^p$-Cauchy 列存在几乎处处收敛子列 |
+| 2.18 | $L^2(\Omega)$ 是 Hilbert 空间 |
+| 2.19 | $C_c(\Omega)$ 在 $L^p(\Omega)$ 中稠密，$p<\infty$ |
+| 2.20 | 简单函数在 $L^p$ 中稠密，包括 $p=\infty$ |
+| 2.21 | $L^p$ 在 $p<\infty$ 时可分，$L^\infty$ 一般不可分 |
+| 2.22 | 连续有界函数是 $L^\infty$ 的真闭子空间 |
+| 2.23 | 若 $u\in L^p$、$v\in L^{p'}$，则 $u*v$ 有界且一致连续 |
+| 2.24 | 若 $1/p+1/q+1/r=2$，则 $\left\|\int(u*v)w\right\|\le\|u\|_p\|v\|_q\|w\|_r$ |
+
