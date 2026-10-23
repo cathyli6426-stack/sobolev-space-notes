@@ -1,0 +1,1546 @@
+# 第七课复盘：Young 定理、$\ell^p$ 空间、磨光与光滑逼近
+
+_教材范围：2.24 的证明至 2.30；根据课堂讲义与板书补充整理_
+
+---
+
+## 📋 本节课的主线
+
+本节课包含两条相互衔接的主线。
+
+第一条主线研究卷积的范数估计：
+
+$$
+\text{三线性 Young 定理}
+\Longrightarrow
+\text{Young 卷积不等式}
+\Longrightarrow
+\text{由稠密性推广到一般函数}.
+$$
+
+第二条主线把卷积用于函数逼近：
+
+$$
+\text{构造磨光核}
+\Longrightarrow
+\text{卷积产生光滑函数}
+\Longrightarrow
+\text{在 }L^p\text{ 中逼近原函数}
+\Longrightarrow
+C_c^\infty(\Omega)\text{ 稠密}.
+$$
+
+中间的 $\ell^p$ 空间是 $L^p$ 理论在计数测度下的离散版本。它不仅继承 Hölder、Minkowski 和 Young 不等式，而且能帮助我们看清：空间的测度结构会直接影响不同指数空间之间的嵌入方向。
+
+~~~mermaid
+flowchart TB
+    accTitle: 本节课知识链条
+    accDescr: 从三线性 Young 定理出发，经卷积范数估计和稠密延拓得到一般结论，同时进入离散序列空间与磨光逼近理论。
+
+    young_trilinear["2.24 三线性 Young 定理"] --> young_norm["2.25 卷积范数估计"]
+    young_norm --> dense_extension["2.26 稠密延拓"]
+    dense_extension --> general_young(["一般 Young 定理"])
+    general_young -.->|"离散类比"| sequence_space["2.27 序列空间"]
+    general_young --> mollifier["2.28 构造磨光核"]
+    mollifier --> smooth_properties["2.29 光滑与逼近性质"]
+    smooth_properties --> smooth_density(["2.30 光滑函数稠密"])
+~~~
+
+> 📌 **记号约定：** 本讲义用 $C_c(\Omega)$ 表示连续紧支撑函数，用 $C_c^\infty(\Omega)$ 表示光滑紧支撑函数。教材中的 $C_0(\Omega)$、$C_0^\infty(\Omega)$ 在这里按其“紧支撑”含义理解。
+
+---
+
+## 📚 2.24 Young 定理的证明
+
+### 定理陈述
+
+设
+
+$$
+p,q,r\ge 1,
+\qquad
+\frac1p+\frac1q+\frac1r=2.
+$$
+
+若
+
+$$
+u\in L^p(\mathbb R^n),
+\qquad
+v\in L^q(\mathbb R^n),
+\qquad
+w\in L^r(\mathbb R^n),
+$$
+
+则
+
+$$
+\boxed{
+\left|
+\int_{\mathbb R^n}(u*v)(x)w(x)\,dx
+\right|
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+}
+$$
+
+这是一条三线性估计。它控制的不是单独的 $u*v$，而是卷积与第三个函数 $w$ 的配对。
+
+### 为什么先假设 $u\in C_c(\mathbb R^n)$
+
+对一般的 $u\in L^p$，表达式 $(x,y)\mapsto u(x-y)$ 的代表元和二重积分交换需要额外处理。教材先在
+
+$$
+u\in C_c(\mathbb R^n)
+$$
+
+的情形完成核心估计，此时 $(x,y)\mapsto u(x-y)$ 连续且可测，相关积分也更容易用 Tonelli–Fubini 定理处理。随后在 2.26 中利用稠密性和有界算子延拓去掉这一附加条件。
+
+### 共轭指数关系
+
+先考虑
+
+$$
+1<p,q,r<\infty.
+$$
+
+记共轭指数为 $p',q',r'$，即
+
+$$
+\frac1p+\frac1{p'}=1,
+\qquad
+\frac1q+\frac1{q'}=1,
+\qquad
+\frac1r+\frac1{r'}=1.
+$$
+
+由假设可得
+
+$$
+\frac1{p'}+\frac1{q'}+\frac1{r'}
+=
+3-\left(\frac1p+\frac1q+\frac1r\right)
+=1.
+$$
+
+因此可以在乘积空间 $\mathbb R^n\times\mathbb R^n$ 上使用三函数 Hölder 不等式，其指数正是 $p',q',r'$。
+
+### 关键分解
+
+由卷积定义和 Tonelli 定理，
+
+$$
+\begin{aligned}
+\left|
+\int_{\mathbb R^n}(u*v)(x)w(x)\,dx
+\right|
+&\le
+\int_{\mathbb R^n}\int_{\mathbb R^n}
+|u(x-y)v(y)w(x)|\,dy\,dx.
+\end{aligned}
+$$
+
+在 $\mathbb R^{2n}$ 上定义
+
+$$
+U(x,y)
+:=
+|v(y)|^{q/p'}
+|w(x)|^{r/p'},
+$$
+
+$$
+V(x,y)
+:=
+|u(x-y)|^{p/q'}
+|w(x)|^{r/q'},
+$$
+
+$$
+W(x,y)
+:=
+|u(x-y)|^{p/r'}
+|v(y)|^{q/r'}.
+$$
+
+现在验证三个因子的乘积恰好等于原被积函数。以 $u$ 为例，它在 $V$ 与 $W$ 中的总指数是
+
+$$
+\frac p{q'}+\frac p{r'}
+=
+p\left(\frac1{q'}+\frac1{r'}\right).
+$$
+
+而
+
+$$
+\frac1{q'}+\frac1{r'}
+=
+1-\frac1{p'}
+=
+\frac1p,
+$$
+
+所以
+
+$$
+\frac p{q'}+\frac p{r'}=1.
+$$
+
+同理，$v$ 和 $w$ 的总指数也都是 $1$。因此
+
+$$
+U(x,y)V(x,y)W(x,y)
+=
+|u(x-y)v(y)w(x)|.
+$$
+
+### 应用三函数 Hölder 不等式
+
+由
+
+$$
+\frac1{p'}+\frac1{q'}+\frac1{r'}=1,
+$$
+
+得到
+
+$$
+\iint_{\mathbb R^{2n}}UVW
+\le
+\|U\|_{p'}\|V\|_{q'}\|W\|_{r'}.
+$$
+
+分别计算三个范数。首先，
+
+$$
+\begin{aligned}
+\|U\|_{p'}^{p'}
+&=
+\iint_{\mathbb R^{2n}}
+|v(y)|^q|w(x)|^r\,dy\,dx\\
+&=
+\|v\|_q^q\|w\|_r^r,
+\end{aligned}
+$$
+
+故
+
+$$
+\|U\|_{p'}
+=
+\|v\|_q^{q/p'}\|w\|_r^{r/p'}.
+$$
+
+其次，利用变量替换 $z=x-y$，
+
+$$
+\begin{aligned}
+\|V\|_{q'}^{q'}
+&=
+\iint_{\mathbb R^{2n}}
+|u(x-y)|^p|w(x)|^r\,dy\,dx\\
+&=
+\|u\|_p^p\|w\|_r^r,
+\end{aligned}
+$$
+
+所以
+
+$$
+\|V\|_{q'}
+=
+\|u\|_p^{p/q'}\|w\|_r^{r/q'}.
+$$
+
+同理，
+
+$$
+\|W\|_{r'}
+=
+\|u\|_p^{p/r'}\|v\|_q^{q/r'}.
+$$
+
+三者相乘时，$\|u\|_p$ 的指数为
+
+$$
+\frac p{q'}+\frac p{r'}=1,
+$$
+
+另外两个范数的指数也分别为 $1$。所以
+
+$$
+\|U\|_{p'}\|V\|_{q'}\|W\|_{r'}
+=
+\|u\|_p\|v\|_q\|w\|_r.
+$$
+
+最终得到
+
+$$
+\boxed{
+\left|
+\int_{\mathbb R^n}(u*v)(x)w(x)\,dx
+\right|
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+}
+$$
+
+### 端点指数如何处理
+
+上述分解写法假设 $p,q,r$ 都严格大于 $1$。若某个指数等于 $1$，可以直接把对应函数放在外层使用 $L^1$ 范数，并对剩余两个函数使用 Hölder 不等式。
+
+例如，若 $p=1$，则
+
+$$
+\frac1q+\frac1r=1.
+$$
+
+作变量替换 $z=x-y$，有
+
+$$
+\begin{aligned}
+\iint |u(x-y)v(y)w(x)|\,dy\,dx
+&=
+\int_{\mathbb R^n}|u(z)|
+\left(
+\int_{\mathbb R^n}|v(y)w(y+z)|\,dy
+\right)dz\\
+&\le
+\int_{\mathbb R^n}|u(z)|\,
+\|v\|_q\|w\|_r\,dz\\
+&=
+\|u\|_1\|v\|_q\|w\|_r.
+\end{aligned}
+$$
+
+其余端点情形同理。
+
+### 关于最佳常数
+
+上面的 Hölder 证明给出常数 $1$。教材进一步指出，右端可以乘上更小的最佳常数
+
+$$
+K(p,q,r,n)
+=
+\left(
+\frac{
+p^{1/p}q^{1/q}r^{1/r}
+}{
+(p')^{1/p'}(q')^{1/q'}(r')^{1/r'}
+}
+\right)^{n/2}
+\le1.
+$$
+
+这个最佳常数不由上述简单 Hölder 分解直接推出；本节只记录结论，不展开其证明。
+
+当某个指数等于 $1$、相应共轭指数等于 $\infty$ 时，最佳常数公式按极限约定解释，例如 $(\infty)^{1/\infty}$ 视为 $1$。
+
+---
+
+## 📚 2.25 Young 卷积不等式
+
+### 定理陈述
+
+设
+
+$$
+1\le p,q,r\le\infty,
+\qquad
+\frac1p+\frac1q
+=
+1+\frac1r.
+$$
+
+若
+
+$$
+u\in L^p(\mathbb R^n),
+\qquad
+v\in L^q(\mathbb R^n),
+$$
+
+则
+
+$$
+u*v\in L^r(\mathbb R^n)
+$$
+
+且
+
+$$
+\boxed{
+\|u*v\|_r
+\le
+K(p,q,r',n)\|u\|_p\|v\|_q
+\le
+\|u\|_p\|v\|_q.
+}
+$$
+
+通常把常数为 $1$ 的估计称为 Young 卷积不等式。
+
+### 从 2.24 推导 2.25
+
+由
+
+$$
+\frac1p+\frac1q=1+\frac1r
+$$
+
+以及
+
+$$
+\frac1{r'}=1-\frac1r,
+$$
+
+可得
+
+$$
+\frac1p+\frac1q+\frac1{r'}=2.
+$$
+
+因此对任意 $w\in L^{r'}(\mathbb R^n)$，2.24 给出
+
+$$
+\left|
+\int_{\mathbb R^n}(u*v)(x)w(x)\,dx
+\right|
+\le
+\|u\|_p\|v\|_q\|w\|_{r'}.
+$$
+
+再利用 $L^r$ 范数的对偶刻画，
+
+$$
+\|f\|_r
+=
+\sup_{\|w\|_{r'}\le1}
+\left|
+\int_{\mathbb R^n}f(x)w(x)\,dx
+\right|,
+$$
+
+便得到
+
+$$
+\|u*v\|_r
+\le
+\|u\|_p\|v\|_q.
+$$
+
+> 📌 **指数记忆法：** 点态乘积满足 $1/r=1/p+1/q$；卷积则多出一个“$-1$”，即 $1/r=1/p+1/q-1$。
+
+### 2.25 也能推出 2.24
+
+反过来，若
+
+$$
+\frac1p+\frac1q+\frac1r=2,
+$$
+
+则
+
+$$
+\frac1p+\frac1q
+=
+1+\frac1{r'}.
+$$
+
+Young 卷积不等式给出
+
+$$
+\|u*v\|_{r'}
+\le
+\|u\|_p\|v\|_q.
+$$
+
+再对 $u*v$ 与 $w$ 使用 Hölder 不等式：
+
+$$
+\left|\int (u*v)w\right|
+\le
+\|u*v\|_{r'}\|w\|_r
+\le
+\|u\|_p\|v\|_q\|w\|_r.
+$$
+
+所以 2.24 与 2.25 本质上是同一个卷积估计的三线性形式和范数形式。
+
+---
+
+## 📚 2.26 从稠密子空间推广到一般函数
+
+2.24 的核心证明最初只对 $u\in C_c(\mathbb R^n)$ 完成。2.26 的任务是严谨地去掉这一限制。
+
+### 第一步：固定简单函数 $v$
+
+先假设 $p,q<\infty$。取一个具有有限测度支集的简单函数
+
+$$
+v\in L^q(\mathbb R^n).
+$$
+
+对 $u\in C_c(\mathbb R^n)$ 定义
+
+$$
+T_vu:=u*v.
+$$
+
+由已经证明的 Young 不等式，
+
+$$
+\|T_vu\|_r
+\le
+\|v\|_q\|u\|_p.
+$$
+
+因此
+
+$$
+T_v:C_c(\mathbb R^n)\subset L^p(\mathbb R^n)
+\longrightarrow
+L^r(\mathbb R^n)
+$$
+
+是有界线性算子。因为 $C_c(\mathbb R^n)$ 在 $L^p(\mathbb R^n)$ 中稠密，所以 $T_v$ 唯一延拓为
+
+$$
+T_v:L^p(\mathbb R^n)\longrightarrow L^r(\mathbb R^n),
+$$
+
+并保持相同的算子范数估计。
+
+### 第二步：把延拓识别为通常的卷积积分
+
+给定 $u\in L^p$，选择 $u_j\in C_c$ 使
+
+$$
+u_j\longrightarrow u
+\qquad\text{于 }L^p.
+$$
+
+于是
+
+$$
+T_vu_j\longrightarrow T_vu
+\qquad\text{于 }L^r.
+$$
+
+另一方面，简单函数 $v$ 具有有限测度支集，因此也属于 $L^{p'}$。对每个 $x$，Hölder 不等式给出
+
+$$
+\begin{aligned}
+|(u_j*v)(x)-(u*v)(x)|
+&\le
+\|u_j(x-\cdot)-u(x-\cdot)\|_p\|v\|_{p'}\\
+&=
+\|u_j-u\|_p\|v\|_{p'}
+\longrightarrow0.
+\end{aligned}
+$$
+
+所以 $u_j*v$ 对每个 $x$ 收敛到通常积分定义的 $u*v$。
+
+从 $L^r$ 收敛中再抽取一个几乎处处收敛子列，其极限为 $T_vu$。逐点极限的唯一性说明
+
+$$
+T_vu=u*v
+\qquad\text{几乎处处}.
+$$
+
+因此延拓出来的算子确实就是卷积。
+
+### 第三步：从简单函数 $v$ 推广到任意 $v\in L^q$
+
+现在固定 $u\in L^p$。在简单函数构成的稠密子空间上定义
+
+$$
+S_uv:=u*v.
+$$
+
+已有估计
+
+$$
+\|S_uv\|_r
+\le
+\|u\|_p\|v\|_q.
+$$
+
+故 $S_u$ 唯一延拓为从 $L^q$ 到 $L^r$ 的有界线性算子。
+
+为了确认延拓仍由卷积积分表示，先考虑 $u,v\ge0$。取非负简单函数 $v_j$，使
+
+$$
+0\le v_j\uparrow v,
+\qquad
+\|v_j-v\|_q\longrightarrow0.
+$$
+
+于是
+
+$$
+u*v_j\longrightarrow S_uv
+\qquad\text{于 }L^r.
+$$
+
+可抽取子列使其几乎处处收敛到 $S_uv$。另一方面，由单调收敛定理，
+
+$$
+(u*v_j)(x)\uparrow
+\int_{\mathbb R^n}u(x-y)v(y)\,dy
+=(u*v)(x)
+$$
+
+对每个 $x$ 成立，右端允许暂时取 $+\infty$。由于它几乎处处等于有限的 $L^r$ 函数 $S_uv$，所以卷积几乎处处有限，并且
+
+$$
+S_uv=u*v
+\qquad\text{几乎处处}.
+$$
+
+一般的实值或复值函数可分解为正负部、实部和虚部，从而得到全部情形。
+
+### 端点情形
+
+若 $p$ 或 $q$ 为 $\infty$，由指数关系可知唯一额外情形是
+
+$$
+(p,q,r)=(1,\infty,\infty)
+\quad\text{或}\quad
+(\infty,1,\infty).
+$$
+
+这时直接由
+
+$$
+\|u*v\|_\infty
+\le
+\|u\|_1\|v\|_\infty
+$$
+
+及交换律处理，不需要稠密延拓。
+
+### 这一证明的逻辑结构
+
+证明分为两个不能省略的层次：
+
+1. 先用范数估计把卷积算子从稠密子空间连续延拓
+2. 再用逐点收敛、几乎处处收敛或单调收敛，把抽象延拓与原来的积分公式识别
+
+只有第一步只能得到一个抽象有界算子，尚不能自动断言它就是积分意义下的卷积。
+
+---
+
+## 📚 2.27 序列空间 $\ell^p$
+
+### 定义
+
+对双向无穷序列
+
+$$
+a=\{a_i\}_{i=-\infty}^{\infty},
+$$
+
+定义
+
+$$
+\|a\|_{\ell^p}
+:=
+\left(
+\sum_{i=-\infty}^{\infty}|a_i|^p
+\right)^{1/p},
+\qquad 0<p<\infty,
+$$
+
+以及
+
+$$
+\|a\|_{\ell^\infty}
+:=
+\sup_{i\in\mathbb Z}|a_i|.
+$$
+
+若相应表达式有限，就称 $a\in\ell^p$。
+
+当 $1\le p\le\infty$ 时，$\ell^p$ 是 Banach 空间；当 $0<p<1$ 时，上式只给出拟范数，不满足通常的三角不等式。
+
+### $\ell^p$ 是离散的 $L^p$
+
+定义阶梯函数
+
+$$
+f(t)=a_i,
+\qquad
+i\le t<i+1.
+$$
+
+则
+
+$$
+\|f\|_{L^p(\mathbb R)}
+=
+\|a\|_{\ell^p}.
+$$
+
+因此 $\ell^p$ 可以看成整数点集 $\mathbb Z$ 配备计数测度时的 $L^p$ 空间。很多 $L^p$ 结论可以逐项求和得到其离散版本。
+
+### 离散 Hölder 与 Minkowski 不等式
+
+若
+
+$$
+\frac1r=\frac1p+\frac1q,
+$$
+
+且 $a\in\ell^p$、$b\in\ell^q$，则逐项乘积
+
+$$
+ab=\{a_ib_i\}
+$$
+
+属于 $\ell^r$，并且
+
+$$
+\boxed{
+\|ab\|_{\ell^r}
+\le
+\|a\|_{\ell^p}\|b\|_{\ell^q}.
+}
+$$
+
+若 $a,b\in\ell^p$ 且 $p\ge1$，则
+
+$$
+\boxed{
+\|a+b\|_{\ell^p}
+\le
+\|a\|_{\ell^p}+\|b\|_{\ell^p}.
+}
+$$
+
+证明与函数空间中的 Hölder、Minkowski 不等式完全平行，只需把积分换成求和。
+
+### 离散卷积与 Young 不等式
+
+定义
+
+$$
+(a*b)_i
+:=
+\sum_{j=-\infty}^{\infty}a_{i-j}b_j.
+$$
+
+若 $1\le p,q\le\infty$ 且
+
+$$
+\frac1p+\frac1q\ge1,
+$$
+
+则这个级数对每个 $i$ 绝对收敛。事实上，该条件等价于 $p\le q'$；而 $\ell^p\subset\ell^{q'}$，所以
+
+$$
+\sum_j|a_{i-j}b_j|
+\le
+\|\{a_{i-j}\}_j\|_{\ell^{q'}}
+\|b\|_{\ell^q}
+<\infty.
+$$
+
+若再令
+
+$$
+1+\frac1r
+=
+\frac1p+\frac1q,
+$$
+
+则
+
+$$
+\boxed{
+\|a*b\|_{\ell^r}
+\le
+\|a\|_{\ell^p}\|b\|_{\ell^q}.
+}
+$$
+
+这就是离散 Young 不等式。
+
+### $\ell^p$ 的嵌入方向
+
+若
+
+$$
+0<p\le q\le\infty,
+$$
+
+则
+
+$$
+\boxed{
+\ell^p\subset\ell^q,
+\qquad
+\|a\|_{\ell^q}\le\|a\|_{\ell^p}.
+}
+$$
+
+先注意对每个 $i$，
+
+$$
+|a_i|\le\|a\|_{\ell^p}.
+$$
+
+若 $q<\infty$，则
+
+$$
+\begin{aligned}
+\sum_i|a_i|^q
+&=
+\sum_i|a_i|^p|a_i|^{q-p}\\
+&\le
+\|a\|_{\ell^\infty}^{q-p}
+\sum_i|a_i|^p\\
+&\le
+\|a\|_{\ell^p}^q.
+\end{aligned}
+$$
+
+取 $q$ 次方根即可。$q=\infty$ 时结论已经包含在 $|a_i|\le\|a\|_{\ell^p}$ 中。
+
+这与有限测度区域上的
+
+$$
+L^q(\Omega)\subset L^p(\Omega),
+\qquad p\le q,
+$$
+
+方向相反。原因是计数测度空间 $\mathbb Z$ 的总测度为无穷，而不是有限测度空间。
+
+| 空间 | 指数关系 | 嵌入方向 |
+|---|---:|---|
+| $L^p(\Omega)$，$\|\Omega\|<\infty$ | $p\le q$ | $L^q\subset L^p$ |
+| $\ell^p$ | $p\le q$ | $\ell^p\subset\ell^q$ |
+
+### 有限维空间中的范数等价
+
+对 $a=(a_1,\ldots,a_N)\in\mathbb C^N$，
+
+$$
+\boxed{
+\|a\|_\infty
+\le
+\|a\|_p
+\le
+N^{1/p}\|a\|_\infty.
+}
+$$
+
+因此有限维空间中的所有 $\ell^p$ 范数彼此等价，但等价常数依赖维数 $N$。当维数趋于无穷时，这些常数不再统一，这正是无穷维 $\ell^p$ 空间出现严格嵌入差异的原因。
+
+### 课堂延伸：$\ell^p$ 的插值不等式
+
+若
+
+$$
+1\le p\le q\le r\le\infty,
+\qquad
+\frac1q
+=
+\frac\theta p+\frac{1-\theta}{r},
+\qquad
+0\le\theta\le1,
+$$
+
+则
+
+$$
+\boxed{
+\|a\|_{\ell^q}
+\le
+\|a\|_{\ell^p}^{\theta}
+\|a\|_{\ell^r}^{1-\theta}.
+}
+$$
+
+证明与 $L^p$ 插值完全相同：把
+
+$$
+|a_i|^q
+=
+|a_i|^{\theta q}
+|a_i|^{(1-\theta)q}
+$$
+
+逐项求和，再使用 Hölder 不等式。
+
+---
+
+## 📚 2.28 磨光核
+
+### 标准磨光核的定义
+
+取非负实值函数
+
+$$
+J\in C_c^\infty(\mathbb R^n)
+$$
+
+满足
+
+$$
+J(x)=0
+\qquad\text{当 }|x|\ge1,
+$$
+
+以及
+
+$$
+\int_{\mathbb R^n}J(x)\,dx=1.
+$$
+
+一个标准构造是
+
+$$
+J(x)
+=
+\begin{cases}
+k\exp\left(-\dfrac1{1-|x|^2}\right),
+& |x|<1,\\[8pt]
+0,
+& |x|\ge1,
+\end{cases}
+$$
+
+其中常数 $k>0$ 取成使积分等于 $1$。
+
+这个函数在球内为正，并在边界 $|x|=1$ 处连同所有阶导数一起趋于零，因此零延拓后仍属于 $C_c^\infty(\mathbb R^n)$。
+
+### 缩放后的磨光核
+
+对 $\varepsilon>0$，定义
+
+$$
+\boxed{
+J_\varepsilon(x)
+:=
+\varepsilon^{-n}J\left(\frac x\varepsilon\right).
+}
+$$
+
+它具有以下性质：
+
+1. $J_\varepsilon\ge0$
+2. $J_\varepsilon\in C_c^\infty(\mathbb R^n)$
+3. $\mathrm{supp}\,J_\varepsilon\subset\overline{B_\varepsilon(0)}$
+4. $\displaystyle\int_{\mathbb R^n}J_\varepsilon(x)\,dx=1$
+
+第四条由变量替换 $x=\varepsilon z$ 得到：
+
+$$
+\int_{\mathbb R^n}J_\varepsilon(x)\,dx
+=
+\int_{\mathbb R^n}
+\varepsilon^{-n}J(x/\varepsilon)\,dx
+=
+\int_{\mathbb R^n}J(z)\,dz
+=1.
+$$
+
+对任意多重指标 $\alpha$，缩放公式为
+
+$$
+D^\alpha J_\varepsilon(x)
+=
+\varepsilon^{-n-|\alpha|}
+(D^\alpha J)\left(\frac x\varepsilon\right).
+$$
+
+### 磨光与正则化
+
+若卷积有意义，定义
+
+$$
+\boxed{
+(J_\varepsilon*u)(x)
+:=
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)u(y)\,dy.
+}
+$$
+
+$J_\varepsilon*u$ 称为 $u$ 的磨光、正则化或光滑化。
+
+直观上，$J_\varepsilon*u(x)$ 是 $u$ 在 $x$ 附近半径 $\varepsilon$ 范围内的加权平均；随着 $\varepsilon\downarrow0$，平均区域缩小到点 $x$。
+
+### $J_\varepsilon$ 逼近 Dirac 分布
+
+对任意测试函数 $\varphi\in C_c^\infty(\mathbb R^n)$，
+
+$$
+\begin{aligned}
+\int_{\mathbb R^n}J_\varepsilon(x)\varphi(x)\,dx
+&=
+\int_{\mathbb R^n}J(z)\varphi(\varepsilon z)\,dz\\
+&\longrightarrow
+\varphi(0)
+\int_{\mathbb R^n}J(z)\,dz\\
+&=
+\varphi(0).
+\end{aligned}
+$$
+
+因此
+
+$$
+\boxed{
+J_\varepsilon\longrightarrow\delta_0
+\qquad\text{于 }\mathcal D'(\mathbb R^n).
+}
+$$
+
+这就是“近似恒等族”或“逼近单位”的分布意义。
+
+---
+
+## 📚 2.29 磨光的基本性质
+
+以下均把定义在 $\Omega$ 上的函数 $u$ 在 $\mathbb R^n\setminus\Omega$ 上作零延拓，然后与 $J_\varepsilon$ 卷积。
+
+### 性质 (a)：局部可积函数磨光后无穷光滑
+
+若
+
+$$
+u\in L_{\mathrm{loc}}^1(\mathbb R^n),
+$$
+
+则
+
+$$
+\boxed{
+J_\varepsilon*u\in C^\infty(\mathbb R^n).
+}
+$$
+
+并且对每个多重指标 $\alpha$，
+
+$$
+\boxed{
+D^\alpha(J_\varepsilon*u)
+=
+(D^\alpha J_\varepsilon)*u.
+}
+$$
+
+#### 证明
+
+对固定 $x$，只有满足
+
+$$
+|x-y|<\varepsilon
+$$
+
+的 $y$ 才对积分有贡献，所以积分只涉及 $u$ 在紧集附近的局部可积性。
+
+由于 $J_\varepsilon$ 的各阶导数都光滑且紧支撑，可以在积分号下求导：
+
+$$
+\begin{aligned}
+D_x^\alpha(J_\varepsilon*u)(x)
+&=
+D_x^\alpha
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)u(y)\,dy\\
+&=
+\int_{\mathbb R^n}
+D_x^\alpha J_\varepsilon(x-y)u(y)\,dy.
+\end{aligned}
+$$
+
+任意阶导数都存在且连续，因此 $J_\varepsilon*u\in C^\infty$。
+
+> 📌 **核心机制：** 导数落在光滑核 $J_\varepsilon$ 上，而不需要 $u$ 本身可微。这正是卷积能够“磨平”不规则性的原因。
+
+### 性质 (b)：紧支撑被保留在区域内部
+
+若
+
+$$
+u\in L_{\mathrm{loc}}^1(\Omega),
+\qquad
+\mathrm{supp}\,u\Subset\Omega,
+$$
+
+并且
+
+$$
+0<\varepsilon
+<
+\mathrm{dist}(\mathrm{supp}\,u,\partial\Omega),
+$$
+
+则
+
+$$
+\boxed{
+J_\varepsilon*u\in C_c^\infty(\Omega).
+}
+$$
+
+由卷积支集的基本包含关系，
+
+$$
+\mathrm{supp}(J_\varepsilon*u)
+\subset
+\mathrm{supp}\,u
++
+\mathrm{supp}\,J_\varepsilon,
+$$
+
+其中右侧是 Minkowski 和。因为
+
+$$
+\mathrm{supp}\,J_\varepsilon
+\subset
+\overline{B_\varepsilon(0)},
+$$
+
+所以
+
+$$
+\mathrm{supp}(J_\varepsilon*u)
+\subset
+\left\{
+x:
+\mathrm{dist}(x,\mathrm{supp}\,u)\le\varepsilon
+\right\}
+\Subset\Omega.
+$$
+
+结合性质 (a)，便得到 $J_\varepsilon*u\in C_c^\infty(\Omega)$。
+
+### 性质 (c)：$L^p$ 范数收缩
+
+若
+
+$$
+u\in L^p(\Omega),
+\qquad
+1\le p<\infty,
+$$
+
+则
+
+$$
+J_\varepsilon*u\in L^p(\mathbb R^n)
+$$
+
+并且
+
+$$
+\boxed{
+\|J_\varepsilon*u\|_p
+\le
+\|u\|_p.
+}
+$$
+
+这可以直接看作 Young 不等式
+
+$$
+\|J_\varepsilon*u\|_p
+\le
+\|J_\varepsilon\|_1\|u\|_p
+$$
+
+与 $\|J_\varepsilon\|_1=1$ 的结果。
+
+教材还给出了一个直接证明。因为 $J_\varepsilon(x-y)\,dy$ 对固定 $x$ 是总质量为 $1$ 的非负测度，由 Jensen 不等式，
+
+$$
+|J_\varepsilon*u(x)|^p
+\le
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)|u(y)|^p\,dy.
+$$
+
+对 $x$ 积分，并使用 Tonelli–Fubini 定理：
+
+$$
+\begin{aligned}
+\int_{\mathbb R^n}|J_\varepsilon*u(x)|^p\,dx
+&\le
+\int_{\mathbb R^n}
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)|u(y)|^p\,dy\,dx\\
+&=
+\int_{\mathbb R^n}|u(y)|^p
+\left(
+\int_{\mathbb R^n}J_\varepsilon(x-y)\,dx
+\right)dy\\
+&=
+\|u\|_p^p.
+\end{aligned}
+$$
+
+$p=1$ 时可直接使用积分三角不等式得到同一结论。
+
+### 性质 (c) 的第二部分：在 $L^p$ 中逼近原函数
+
+若 $1\le p<\infty$，则
+
+$$
+\boxed{
+\lim_{\varepsilon\downarrow0}
+\|J_\varepsilon*u-u\|_p
+=0.
+}
+$$
+
+#### 教材的稠密性证明
+
+任取 $\eta>0$。由 $C_c(\Omega)$ 在 $L^p(\Omega)$ 中稠密，可以选取 $\varphi\in C_c(\Omega)$，使
+
+$$
+\|u-\varphi\|_p<\frac\eta3.
+$$
+
+由范数收缩性，
+
+$$
+\|J_\varepsilon*(u-\varphi)\|_p
+\le
+\|u-\varphi\|_p
+<
+\frac\eta3.
+$$
+
+再由三角不等式，
+
+$$
+\begin{aligned}
+\|J_\varepsilon*u-u\|_p
+&\le
+\|J_\varepsilon*(u-\varphi)\|_p
++\|J_\varepsilon*\varphi-\varphi\|_p
++\|\varphi-u\|_p\\
+&<
+\frac{2\eta}{3}
++\|J_\varepsilon*\varphi-\varphi\|_p.
+\end{aligned}
+$$
+
+因为 $\varphi$ 连续且紧支撑，它一致连续；并且当 $\varepsilon\le1$ 时，$J_\varepsilon*\varphi-\varphi$ 的支集包含在某个固定的有限测度紧集中。由下文性质 (d) 的一致收敛，
+
+$$
+\|J_\varepsilon*\varphi-\varphi\|_p
+\longrightarrow0.
+$$
+
+取充分小的 $\varepsilon$ 即得
+
+$$
+\|J_\varepsilon*u-u\|_p<\eta.
+$$
+
+#### 另一种直接证明：利用平移连续性
+
+把卷积改写为
+
+$$
+(J_\varepsilon*u)(x)-u(x)
+=
+\int_{\mathbb R^n}
+J_\varepsilon(y)
+\bigl(u(x-y)-u(x)\bigr)\,dy.
+$$
+
+由积分型 Minkowski 不等式，
+
+$$
+\begin{aligned}
+\|J_\varepsilon*u-u\|_p
+&\le
+\int_{\mathbb R^n}
+J_\varepsilon(y)
+\|u(\cdot-y)-u(\cdot)\|_p\,dy\\
+&\le
+\sup_{|y|<\varepsilon}
+\|u(\cdot-y)-u(\cdot)\|_p.
+\end{aligned}
+$$
+
+由于 $L^p$ 平移连续，右端当 $\varepsilon\downarrow0$ 时趋于零。
+
+### 性质 (d)：在内部紧集上一致逼近
+
+若
+
+$$
+u\in C(\Omega),
+\qquad
+G\Subset\Omega,
+$$
+
+则
+
+$$
+\boxed{
+J_\varepsilon*u\longrightarrow u
+\quad\text{在 }G\text{ 上一致收敛}.
+}
+$$
+
+取
+
+$$
+0<\varepsilon<\mathrm{dist}(G,\partial\Omega).
+$$
+
+利用 $\int J_\varepsilon=1$，
+
+$$
+\begin{aligned}
+|J_\varepsilon*u(x)-u(x)|
+&=
+\left|
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)
+\bigl(u(y)-u(x)\bigr)\,dy
+\right|\\
+&\le
+\int_{\mathbb R^n}
+J_\varepsilon(x-y)
+|u(y)-u(x)|\,dy\\
+&\le
+\sup_{\substack{x\in G\\|x-y|<\varepsilon}}
+|u(y)-u(x)|.
+\end{aligned}
+$$
+
+$u$ 在 $G$ 的一个固定紧邻域上一致连续，所以右端趋于零。
+
+### 性质 (e)：整体一致逼近
+
+在教材的假设下，$u$ 已经在 $\Omega$ 外取零。若这个零延拓在整个 $\mathbb R^n$ 上一致连续，则
+
+$$
+\boxed{
+\|J_\varepsilon*u-u\|_\infty
+\longrightarrow0.
+}
+$$
+
+证明与性质 (d) 完全相同，只需把 $x\in G$ 换成 $x\in\mathbb R^n$。
+
+教材把这一情形写成 $u\in C(\overline\Omega)$。这里应结合开头“$u$ 在 $\Omega$ 外恒为零”的约定理解：连续性要求边界值与外部零延拓相容；在常见的有界区域情形，连续零延拓自动一致连续。
+
+> ⚠️ **边界条件不能省略：** 若 $\Omega=(0,1)$，令 $u=1$ 于 $\Omega$、在外部取零，则 $u$ 在 $\Omega$ 内连续，但零延拓在边界跳跃。此时 $J_\varepsilon*u$ 不可能在整个 $\Omega$ 上一致收敛到 $u$，只能在每个 $G\Subset\Omega$ 上一致收敛。
+
+### 五条性质的逻辑关系
+
+| 性质 | 假设 | 结论 | 关键工具 |
+|---|---|---|---|
+| (a) | $u\in L_{\mathrm{loc}}^1$ | $J_\varepsilon*u\in C^\infty$ | 积分号下求导 |
+| (b) | $\mathrm{supp}\,u\Subset\Omega$ | $J_\varepsilon*u\in C_c^\infty(\Omega)$ | 支集 Minkowski 和 |
+| (c) | $u\in L^p,\ p<\infty$ | 范数收缩且 $L^p$ 收敛 | Young、稠密性 |
+| (d) | $u\in C(\Omega)$ | 内部紧集上一致收敛 | 局部一致连续 |
+| (e) | 零延拓一致连续 | 全局一致收敛 | 全局一致连续 |
+
+---
+
+## 📚 2.30 光滑紧支撑函数在 $L^p$ 中稠密
+
+### 推论
+
+若
+
+$$
+1\le p<\infty,
+$$
+
+则
+
+$$
+\boxed{
+\overline{C_c^\infty(\Omega)}^{\,\|\cdot\|_p}
+=
+L^p(\Omega).
+}
+$$
+
+### 证明
+
+任取
+
+$$
+u\in L^p(\Omega),
+\qquad
+\eta>0.
+$$
+
+由 2.19，存在 $\varphi\in C_c(\Omega)$，使
+
+$$
+\|u-\varphi\|_p<\frac\eta2.
+$$
+
+因为 $\mathrm{supp}\,\varphi\Subset\Omega$，可取
+
+$$
+0<\varepsilon
+<
+\mathrm{dist}(\mathrm{supp}\,\varphi,\partial\Omega).
+$$
+
+由 2.29(b)，
+
+$$
+J_\varepsilon*\varphi
+\in
+C_c^\infty(\Omega).
+$$
+
+再由 2.29(c) 或 2.29(e)，
+
+$$
+\|J_\varepsilon*\varphi-\varphi\|_p
+\longrightarrow0.
+$$
+
+因此可以把 $\varepsilon$ 取得充分小，使
+
+$$
+\|J_\varepsilon*\varphi-\varphi\|_p
+<
+\frac\eta2.
+$$
+
+令
+
+$$
+\psi:=J_\varepsilon*\varphi.
+$$
+
+则 $\psi\in C_c^\infty(\Omega)$，并且
+
+$$
+\begin{aligned}
+\|u-\psi\|_p
+&\le
+\|u-\varphi\|_p
++\|\varphi-\psi\|_p\\
+&<
+\eta.
+\end{aligned}
+$$
+
+这就证明了 $C_c^\infty(\Omega)$ 在 $L^p(\Omega)$ 中稠密。
+
+### 为什么只陈述 $p<\infty$
+
+在 $L^\infty$ 范数下，一般的跳跃函数不能被连续函数任意逼近，更不可能被 $C_c^\infty$ 函数任意逼近。因此
+
+$$
+C_c^\infty(\Omega)
+$$
+
+通常不在 $L^\infty(\Omega)$ 中稠密。
+
+---
+
+## 🔍 容易混淆的关键点
+
+### 三线性 Young 与卷积 Young 的指数不同
+
+三线性形式使用
+
+$$
+\frac1p+\frac1q+\frac1r=2.
+$$
+
+卷积范数形式使用
+
+$$
+\frac1p+\frac1q
+=
+1+\frac1r.
+$$
+
+二者通过 $r$ 与 $r'$ 的对偶关系互相转换。
+
+### 有界算子延拓不等于自动得到积分公式
+
+从稠密子空间延拓只能先得到抽象算子。必须再用逐点收敛、几乎处处收敛或单调收敛，证明延拓结果与
+
+$$
+\int u(x-y)v(y)\,dy
+$$
+
+相同。
+
+### 磨光会扩大支集
+
+一般只有
+
+$$
+\mathrm{supp}(J_\varepsilon*u)
+\subset
+\mathrm{supp}\,u+\overline{B_\varepsilon(0)}.
+$$
+
+因此必须要求
+
+$$
+\varepsilon
+<
+\mathrm{dist}(\mathrm{supp}\,u,\partial\Omega)
+$$
+
+才能保证磨光后的函数仍紧支撑于 $\Omega$ 内。
+
+### $L^p$ 收敛不等于一致收敛
+
+对任意 $u\in L^p$、$p<\infty$，有
+
+$$
+J_\varepsilon*u\to u
+\quad\text{于 }L^p.
+$$
+
+但一致收敛需要连续性和一致连续性条件；对有跳跃的函数通常不成立。
+
+### 光滑性来自核，不来自原函数
+
+公式
+
+$$
+D^\alpha(J_\varepsilon*u)
+=(D^\alpha J_\varepsilon)*u
+$$
+
+把所有导数转移到光滑核上，所以即使 $u$ 只有局部可积性，磨光结果仍然无穷光滑。
+
+---
+
+## 📋 复习速查
+
+### 核心结论
+
+| 编号 | 核心结论 |
+|---|---|
+| 2.24 | 若 $1/p+1/q+1/r=2$，则 $\left|\int(u*v)w\right|\le\|u\|_p\|v\|_q\|w\|_r$ |
+| 2.25 | 若 $1/p+1/q=1+1/r$，则 $\|u*v\|_r\le\|u\|_p\|v\|_q$ |
+| 2.26 | 利用稠密性和连续延拓，把 Young 不等式推广到一般 $L^p$ 函数 |
+| 2.27 | 若 $p\le q$，则 $\ell^p\subset\ell^q$，方向与有限测度 $L^p$ 相反 |
+| 2.27 | 离散 Hölder、Minkowski、Young 不等式与连续情形平行 |
+| 2.28 | $J_\varepsilon(x)=\varepsilon^{-n}J(x/\varepsilon)$ 是质量为 $1$、支集缩小的光滑核 |
+| 2.29(a) | $u\in L_{\mathrm{loc}}^1$ 推出 $J_\varepsilon*u\in C^\infty$ |
+| 2.29(b) | 若支集远离边界，则 $J_\varepsilon*u\in C_c^\infty(\Omega)$ |
+| 2.29(c) | $\|J_\varepsilon*u\|_p\le\|u\|_p$ 且 $J_\varepsilon*u\to u$ 于 $L^p$ |
+| 2.29(d) | 连续函数在内部紧集上被磨光函数一致逼近 |
+| 2.30 | $C_c^\infty(\Omega)$ 在 $L^p(\Omega)$ 中稠密，$1\le p<\infty$ |
+
