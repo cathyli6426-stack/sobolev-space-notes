@@ -1,0 +1,640 @@
+# Sobolev 嵌入定理 · 第四章 §4.1–4.16 课堂讲义
+
+依据 Adams 与 Fournier《Sobolev Spaces》第二版第 79–89 页及课堂批注整理。全课围绕一个问题展开。已知一个函数和它的前几阶弱导数可积，能否据此估计函数在一个点、一张平面或整个区域上的大小？
+
+| 教材位置 | 复习时要能完成的事 |
+|---|---|
+| [§4.1–4.3](#targets) | 读懂嵌入的范数估计，区分连续代表和截面迹，说明闭图像定理怎样使用 |
+| [§4.4–4.11](#geometry) | 会说锥条件的量词，知道强局部 Lipschitz 条件何时使用。其余几何条件掌握含义和蕴含方向 |
+| [§4.12–4.14](#embedding) | 第 85 页星标。会按 $mp$ 与 $n$ 分类，判断 $k,q,\lambda$ 的范围，能单独处理等号 |
+| [§4.15](#local) | 第 87 页标注“常考”。能从一元 Taylor 公式推到式 (8)，解释两次换序和每个半径幂次 |
+| [§4.16](#case-a) | 能用 Hölder 不等式得到点值估计，再用光滑逼近与截面积分得到 A 情形 |
+| [批注作业一](#hw-one) · [批注作业二](#hw-two) · [自测](#review) | 展开二维方向导数，计算三维单位球上的核范数并读图，再尝试独立板演 |
+
+<a name="targets" id="targets"></a>
+
+## §4.1　为什么圆锥里的积分能控制一个点
+
+先看一维想法。设 $u\in C^1([x,x+r])$，其中 $r>0$。对每个 $y\in[x,x+r]$，由微积分基本定理，
+
+$$
+u(x)=u(y)-\int_x^y u'(s)\,ds.
+$$
+
+我们想从右边消去任意选择的 $y$。两边对 $y$ 取平均并取绝对值，交换三角形 $x\le s\le y\le x+r$ 内的积分次序，得到
+
+$$
+\begin{aligned}
+|u(x)|
+&\le \frac1r\int_x^{x+r}|u(y)|\,dy
+  +\frac1r\int_x^{x+r}(x+r-s)|u'(s)|\,ds\\
+&\le \frac1r\int_x^{x+r}|u(y)|\,dy+\int_x^{x+r}|u'(s)|\,ds .
+\end{aligned}
+$$
+
+第一项控制平均高度，第二项控制从平均高度回到顶点时可能发生的变化。代入常数函数就知道为什么需要第一项。一维里区间提供了一条向内的线段。高维里若只取一条线段，它的 $n$ 维体积为零。锥条件给出一束长度和开口受控的线段，从而可以对 $n$ 维区域取平均。§4.15 就是这个计算的高阶、高维版本。
+
+### 记号、弱导数与范数
+
+取 $\Omega\subset\mathbb R^n$ 为开集，$n$ 是环境维数。多重指标 $\alpha=(\alpha_1,\ldots,\alpha_n)$ 记录在各坐标求导的次数。写作 $|\alpha|=\sum_i\alpha_i$、$\alpha!=\prod_i\alpha_i!$ 和 $D^\alpha=\partial_1^{\alpha_1}\cdots\partial_n^{\alpha_n}$，并约定 $D^0u=u$。例如在二维，$\alpha=(2,1)$ 对应 $\partial_1^2\partial_2u$，其总阶数为 $3$。
+
+说 $g$ 是 $u$ 的 $\alpha$ 阶弱导数，是说对每个光滑且支集紧包含于 $\Omega$ 的测试函数 $\phi$，
+
+$$
+\int_\Omega uD^\alpha\phi\,dx=(-1)^{|\alpha|}\int_\Omega g\phi\,dx .
+$$
+
+对于 $1\le p<\infty$，条件 $u\in W^{s,p}(\Omega)$ 要求所有 $|\alpha|\le s$ 的弱导数都属于 $L^p(\Omega)$。这里的 $s$ 为非负整数。使用的范数与零边界空间为
+
+$$
+\|u\|_{s,p,\Omega}=\left(\sum_{|\alpha|\le s}\|D^\alpha u\|_{L^p(\Omega)}^p\right)^{1/p},
+\qquad W_0^{s,p}(\Omega)=\overline{C_c^\infty(\Omega)}^{\,W^{s,p}(\Omega)}.
+$$
+
+$L^\infty$ 使用本性上确界，可忽略零测集上的值。$W^{s,\infty}$ 的范数取上述各阶导数 $L^\infty$ 范数的最大值。本课主定理中源空间指数 $p$ 有限，目标空间指数 $q$ 在规定情形下可以等于 $\infty$。
+
+### 本课用到的实变与泛函工具
+
+- **Hölder 不等式。** 共轭指数满足 $1/p+1/p'=1$。当 $1<p<\infty$ 时 $p'=p/(p-1)$，当 $p=1$ 时 $p'=\infty$。由 $\int|ab|\le\|a\|_p\|b\|_{p'}$，取 $b=1$ 可得 $\int_E |a|\le |E|^{1-1/p}\|a\|_{L^p(E)}$，其中 $0<|E|<\infty$。§4.16 先对低阶项取 $b=1$，再对最高阶项取幂函数作 $b$。
+- **Tonelli 定理与换元。** 非负可测函数的两重积分可交换次序，即使尚未证明积分有限。伸缩 $z=x+a(y-x)$、$a>0$ 的体积元满足 $dz=a^n\,dy$。前者改变先积哪个变量，后者改变被积函数、体积元和积分区域，§4.15 三处都需跟着改。
+- **极坐标。** 写 $z=s\theta$，其中 $s>0$，$\theta$ 在单位球面上，则 $dz=s^{n-1}\,ds\,d\sigma(\theta)$。因此零点附近的幂函数 $|z|^\gamma$ 在球上可积当且仅当 $\gamma>-n$。这是因为 $\int_0^r s^{\gamma+n-1}\,ds$ 在 $\gamma=-n$ 时已按对数发散。
+- **完备性与稠密性。** Banach 空间中的 Cauchy 列有范数极限。第三章的定理 3.17 允许在 $p<\infty$ 时用 $C^\infty(\Omega)\cap W^{s,p}(\Omega)$ 中的函数逼近任意 $W^{s,p}(\Omega)$ 元素。把一个与函数无关的估计用在两个逼近函数之差上，常常就能从光滑情形走到一般情形。
+
+## §4.2　箭头指向哪个空间，又在估计什么
+
+在同一开集上，记号 $X\hookrightarrow Y$ 表示自然包含是有界线性映射。做题时要写出 $\|u\|_Y\le K\|u\|_X$，其中 $K$ 对所有 $u\in X$ 通用。于是 $X$ 中范数有界的一族函数在 $Y$ 中也有界，且 $u_i\to u$ 于 $X$ 蕴含 $u_i\to u$ 于 $Y$。这一章讨论连续嵌入。若题目问紧嵌入，还要证明每个有界序列的像都能抽出在目标范数中收敛的子列。
+
+| 目标 | 要求与测量对象 |
+|---|---|
+| $W^{j,q}(\Omega)$ | 在原区域内保留至多 $j$ 阶导数，改用指数 $q$，$j=0$ 即 $L^q(\Omega)$ |
+| $W^{j,q}(\Omega_k)$ | $H$ 是 $k$ 维仿射平面，$\Omega_k=\Omega\cap H$。使用 $k$ 维体积和 $H$ 上的切向导数 |
+| $C_B^j(\Omega)$ | 各阶经典导数直到 $j$ 阶在域内连续且有界，包括函数本身 |
+| $C^j(\overline\Omega)$ | 按本书约定，直到 $j$ 阶的导数在域内有界且一致连续，各自唯一连续延拓至闭包 |
+| $C^{j,\lambda}(\overline\Omega)$ | 在上一行基础上，以 $0<\lambda\le1$ 控制这些导数在两点之间的变化，$\lambda=1$ 即 Lipschitz 控制 |
+
+后三行的范数尤其重要。令
+
+$$
+M_j(v)=\max_{|\alpha|\le j}\sup_{x\in\Omega}|D^\alpha v(x)|,\qquad
+[g]_\lambda=\sup_{\substack{x,y\in\Omega\\x\ne y}}
+\frac{|g(x)-g(y)|}{|x-y|^\lambda}.
+$$
+
+前两个连续函数空间都使用 $M_j(v)$。一致连续要求对每个 $\varepsilon>0$ 能找到一个对全域通用的 $\delta>0$。Hölder 空间使用更强的范数
+
+$$
+\|v\|_{C^{j,\lambda}(\overline\Omega)}
+=M_j(v)+\max_{|\alpha|\le j}[D^\alpha v]_\lambda .
+$$
+
+它在这个范数下完备。第 80 页“闭子空间”的字样需留意范数。仅用较弱的 $C^j$ 范数，Hölder 类一般并不闭。例如在 $[0,1]$ 上，$g(x)=x^{\lambda/2}$ 满足 $|g(x)-g(0)|/x^\lambda=x^{-\lambda/2}\to\infty$。但多项式可一致逼近 $g$，每个多项式在该区间又都是 Lipschitz 的，因而属于 $C^{0,\lambda}$。
+
+### 连续代表为什么唯一
+
+Sobolev 元素把几乎处处相等的函数视为同一个元素。嵌入 $W^{s,p}\hookrightarrow C_B^j$ 的意思是，每个元素都有代表元 $u^*$ 属于该连续函数空间，并满足其范数估计。若两个连续代表在某个内点取值不同，由连续性，它们在一个开球上仍然不同。开球测度为正，与二者几乎处处相等矛盾。因此有了连续代表，才可以无歧义地写每个内点的 $u(x)$。
+
+### 平面迹如何定义，为什么要先证明估计
+
+对 $k<n$，整个平面 $H$ 的 $n$ 维测度为零。例如把零函数改成平面上取一、平面外取零，它在原空间仍代表零，逐点限制到平面却变了。因此须先对光滑函数定义 $R_Hv=v\vert_{\Omega_k}$，再在定理规定的条件下证明
+
+$$
+\|R_Hv\|_{W^{j,q}(\Omega_k)}\le K\|v\|_{W^{s,p}(\Omega)} .
+$$
+
+取光滑 $u_i\to u$ 于源空间。把估计用于 $u_i-u_\ell$，可知 $R_Hu_i$ 是目标 Banach 空间的 Cauchy 列。定义 $\operatorname{Tr}_Hu=\lim_iR_Hu_i$。如果换一列 $v_i\to u$，则
+
+$$
+\|R_Hu_i-R_Hv_i\|_{W^{j,q}(\Omega_k)}
+\le K\big(\|u_i-u\|_{s,p,\Omega}+\|u-v_i\|_{s,p,\Omega}\big)\to0 .
+$$
+
+所以迹与逼近列无关，且继承同一估计。书中把这个有界迹算子也画成箭头。它一般有核，例如支集与平面分离的光滑函数在平面上的迹为零。这里的 $\Omega_k$ 是域内的截面，积分测度应取平面上的 $k$ 维测度。
+
+**第 80 页蓝色批注中的空间链怎样使用。** 总是有 $C_c^\infty(\Omega)\subset W^{s,p}(\Omega)\subset L^p(\Omega)\subset\mathcal D'(\Omega)$。若写 $C^\infty(\Omega)$，还须要求导数的全域 $L^p$ 范数有限。例如常数 $1$ 在 $\mathbb R^n$ 光滑，但对有限 $p$ 不属于 $L^p(\mathbb R^n)$。中间的 $W^{s,p}\hookrightarrow W^{j,q}$ 要按 §4.12 检查参数。在满足 $W_0^{s,p}\hookrightarrow W_0^{j,q}$ 的同域情形，$1<p,q<\infty$ 时取对偶得到反向的 $W^{-j,q'}\hookrightarrow W^{-s,p'}$。具体做法是将原泛函限制到较小空间，再用嵌入估计控制它。测试函数在两边都稠密，保证这种限制能唯一辨别原泛函。负阶空间的含义沿用第三章 $W^{-s,p'}=(W_0^{s,p})'$ 的约定。
+
+## §4.3　为什么同域 Sobolev 空间的集合包含已经蕴含范数估计
+
+设已知 $W^{s,p}(\Omega)\subset W^{j,q}(\Omega)$。定义恒等算子 $Iu=u$。闭图像定理说，两个 Banach 空间之间处处有定义的线性算子，如果图像是闭的，就有界。此处两个 Sobolev 空间均完备，剩下的一步是证明从两种范数看到的极限相同。
+
+设 $u_i\to u$ 于 $W^{s,p}$，同时 $Iu_i\to v$ 于 $W^{j,q}$。那么 $u_i\to u$ 于 $L^p$，也有 $u_i\to v$ 于 $L^q$。按教材可先从前一收敛中选出几乎处处趋于 $u$ 的子列，再从该子列抽出几乎处处趋于 $v$ 的子列。于是 $u=v$ 几乎处处。另一种写法可以同时处理无穷指数。对任意 $\phi\in C_c^\infty(\Omega)$，Hölder 不等式给出
+
+$$
+\int_\Omega u\phi\,dx=\lim_i\int_\Omega u_i\phi\,dx=\int_\Omega v\phi\,dx .
+$$
+
+由第三章的分布唯一性 $u=v$ 几乎处处。故 $Iu=v$，图像闭，存在 $K$ 使 $\|u\|_{j,q,\Omega}\le K\|u\|_{s,p,\Omega}$。从有界自然包含反推集合包含由定义即得。这里使用了两个空间在同一个开集上有共同的分布意义。
+
+<a name="geometry" id="geometry"></a>
+
+## §4.4–4.11　区域的几何条件
+
+§4.15 要用区域内一整束线段上的积分来估计顶点 $x$ 处的值。若圆锥的大小和张角可以随 $x$ 任意缩小，除以锥体积时得到的常数就可能失去控制。这说明了为什么定理要对区域施加几何条件。以下以 §4.6 的锥条件和 §4.9 的强局部 Lipschitz 条件为主，其他条件记住定义及其关系即可。
+
+### §4.4　有限锥、边界层与局部有限覆盖
+
+给定单位向量 $e$、半径 $\rho>0$、张角 $0<\kappa\le\pi$，教材定义的有限锥为
+
+$$
+C=\{0\}\cup\{s\theta:0<s\le\rho,\ \theta\in S^{n-1},\
+\angle(\theta,e)\le\kappa/2\}.
+$$
+
+顶点是 $0$，沿每条允许的射线最多走 $\rho$。教材称 $\rho$ 为锥高，这里的截面取自球面。$x+C$ 表示平移，保持轴向。允许再旋转，就得到任意一个顶点在 $x$ 且与 $C$ 全等的锥。若把半径换成 $r$，由换元 $z=x+rw$，锥体积为 $c_\kappa r^n$，其中 $c_\kappa>0$ 是同一张角的单位锥在 $\mathbb R^n$ 中的体积。这个因子将出现在 §4.15 的平均估计里。
+
+教材也引入平行多面体 $P=\{\sum_{i=1}^n t_i y_i:0\le t_i\le1\}$，其中 $y_i$ 线性无关。$x+P$ 的中心是 $x+\tfrac12\sum_i y_i$。从顶点 $x$ 看，能在多面体内取一个有限锥，也能取一个较大的同顶点有限锥包住它。
+
+下文记内侧边界层为
+
+$$
+\Omega_\delta=\{x\in\Omega:\operatorname{dist}(x,\partial\Omega)<\delta\}.
+$$
+
+**局部有限覆盖**表示 $\mathbb R^n$ 中每个紧集只遇到有限多个覆盖成员。**重叠次数至多 $R$** 表示每一点至多属于 $R$ 个成员，$R$ 对所有点通用。前一性质便于把局部构造相加，后一性质还给出加总估计所需的统一常数。
+
+### §4.5–4.7　从一条线段到一束可见方向
+
+**§4.5 线段条件。** 对每个边界点 $a\in\partial\Omega$，存在邻域 $U_a$ 和非零向量 $v_a$，使
+
+$$
+z+t v_a\in\Omega
+\qquad(z\in\overline\Omega\cap U_a,\ 0<t<1).
+$$
+
+先固定边界片和一个向量，这个向量对片内**所有**闭包点都适用。它给第三章的逼近方法提供了共同的向内平移方向。
+
+**§4.6 锥条件。** 存在一对固定的参数 $(\rho,\kappa)$，对每个 $x\in\Omega$，都能找到顶点为 $x$、与模板 $C$ 全等的锥 $C_x\subset\Omega$。把量词写成
+
+$$
+\exists\,\rho,\kappa\quad\forall\,x\in\Omega\quad
+\exists\,Q_x\in O(n)\quad x+Q_x C\subset\Omega .
+$$
+
+轴向可以随 $x$ 改变。对 $y\in C_x$，整条线段 $[x,y]$ 都在 $\Omega$ 里，因而 §4.15 可以沿它作 Taylor 展开。对所有 $x$ 使用同样的 $\rho,\kappa$，才得到与 $x$ 无关的体积常数。
+
+**§4.7 弱锥条件（了解）。** 设 $R(x)=\{y\in\Omega:[x,y]\subset\Omega\}$，$\Gamma(x)=R(x)\cap B_1(x)$。要求存在 $\delta_0>0$，使所有 $x\in\Omega$ 都满足 $|\Gamma(x)|\ge\delta_0$。它控制的是单位球内从 $x$ 沿直线能到达的点的总体积。锥条件蕴含它，因为把 $C_x$ 截到半径 $\min(\rho,1)/2$ 就得到一个统一正体积的可见子集。
+
+### §4.8–4.10　边界片上的统一控制
+
+**§4.8 一致锥条件（了解）。** 取边界的局部有限开覆盖 $\{U_i\}$ 和全等的锥 $C_i$（顶点为原点）。要求 $\operatorname{diam}U_i<M$ 有统一上界，某个边界层 $\Omega_\delta$ 被这些片覆盖，并且
+
+$$
+Q_i=\bigcup_{x\in\Omega\cap U_i}(x+C_i)\subset\Omega .
+$$
+
+这些 $Q_i$ 的重叠次数还须有统一上界。固定一个 $i$ 后，整片内各点使用同一轴向的锥。这里限制重叠的是放入锥后得到的 $Q_i$。
+
+**§4.9 强局部 Lipschitz 条件。** 有统一的 $\delta,M>0$ 和重叠次数有界的局部有限边界开覆盖 $\{U_i\}$。在每片适当的直角坐标 $\zeta=(\zeta',\zeta_n)$ 下，存在函数 $g_i$，使
+
+$$
+\Omega\cap U_i=\{\zeta\in U_i:\zeta_n<g_i(\zeta')\},\qquad
+|g_i(\xi)-g_i(\eta)|\le M|\xi-\eta|.
+$$
+
+覆盖还有共同的余量。任意 $x,y\in\Omega_\delta$ 若 $|x-y|<\delta$，就存在同一个 $i$，使 $x,y$ 都落在 $\{z\in U_i:\operatorname{dist}(z,\partial U_i)>\delta\}$。几何上，邻近的两点可以放到同一片内比较，边界的起伏又有共同的斜率界。在有界区域上，可理解为边界处处能在局部写成 Lipschitz 图像，区域位于图像一侧。§4.12 第二部分以此为假设得到直至边界的一致连续性与 Hölder 估计。
+
+**§4.10 一致 $C^m$ 正则性（了解）。** 取局部有限且重叠次数有界的边界开覆盖 $\{U_i\}$。可用 $m$ 阶光滑坐标变换 $\Phi_i:U_i\to B_1(0)$ 把 $U_i\cap\Omega$ 映为上半球 $\{y\in B_1(0):y_n>0\}$。要求 $\Phi_i$ 和逆变换的一阶至 $m$ 阶各偏导数均有与 $i$ 无关的上界，且各个 $\Phi_i^{-1}(B_{1/2}(0))$ 覆盖同一个边界层 $\Omega_\delta$。其作用是把不同边界片化为同一个半球问题，同时控制换坐标的代价。
+
+### §4.11　条件之间的关系及裂缝例
+
+教材给出的蕴含关系有两支。从一致锥条件出发，一支通向线段条件，另一支通向普通锥条件。
+
+$$
+\begin{aligned}
+\text{一致 }C^m\text{ 正则 }(m\ge2)
+&\Longrightarrow \text{强局部 Lipschitz}
+\Longrightarrow \text{一致锥},\\
+\text{一致锥}&\Longrightarrow\text{线段},\\
+\text{一致锥}&\Longrightarrow\text{锥}\Longrightarrow\text{弱锥}.
+\end{aligned}
+$$
+
+回到 §3.20 的开集
+
+$$
+\Omega=\big((-1,0)\cup(0,1)\big)\times(0,1).
+$$
+
+从每个小正方形的内部点都能朝本侧留下统一大小的锥，故 $\Omega$ 满足锥条件。可是裂缝中点 $(0,1/2)$ 没有 §4.5 要求的向量。若向量的水平分量为零，从裂缝出发的点仍在裂缝上。若水平分量非零，取反方向一侧足够靠近裂缝的点，则平移途中会碰到裂缝。两种情形都违背线段条件。
+
+在左右两侧分别取常数 $0$ 和 $1$ 就得到一个内部光滑、各阶导数有界的函数。沿同一高度从两侧靠近裂缝，点的距离趋于零而函数值相差 $1$。这个例子同时解释了为什么锥条件适合估计 $C_B^j(\Omega)$ 范数，而控制 $C^j(\overline\Omega)$ 还要考虑边界两侧的相容性。
+
+<a name="embedding" id="embedding"></a>
+
+## §4.12　Sobolev 嵌入定理（第 85–86 页，课堂星标）
+
+设 $\Omega\subset\mathbb R^n$ 是开区域，$H$ 是 $k$ 维仿射平面，$\Omega_k=\Omega\cap H$，$1\le k\le n$。允许 $k=n$，此时 $\Omega_n=\Omega$。取整数 $j\ge0$、$m\ge1$ 及 $1\le p<\infty$。读 $W^{j+m,p}\to W^{j,q}$ 时，$j$ 是目标保留的导数阶数，$m$ 是比目标多出的阶数。**决定分类的是 $mp$ 与 $n$ 的比较**。特别地，题目若从 $W^{s,p}$ 出发，问能否嵌入 $W^{j,q}$，应先算 $m=s-j$。
+
+### 第一部分　在锥条件下判断 A、B、C
+
+下表中的同一个箭头，在 $k=n$ 时表示同域的自然嵌入，在 $k<n$ 时表示有界迹算子。$W^{j,q}(\Omega_k)$ 中的导数沿 $H$ 的切向计算。表内 $q$ 的下界适用于体积可能无穷的一般区域。
+
+| 情形 | 准确条件 | 域内的结论 | $k$ 维截面上的结论 |
+|---|---|---|---|
+| A | $mp>n$，或 $m=n,\ p=1$ | $W^{j+m,p}(\Omega)\hookrightarrow C_B^j(\Omega)$ | 任意 $1\le k\le n$，迹取值于 $W^{j,q}(\Omega_k)$，$p\le q\le\infty$ |
+| B | $mp=n$ | $W^{m,p}(\Omega)\hookrightarrow L^q(\Omega)$，$p\le q<\infty$ | 任意 $1\le k\le n$，迹取值于 $W^{j,q}(\Omega_k)$，$p\le q<\infty$ |
+| C | $mp1$ 要求 $n-mp
+
+**A 的连续性结论。** 对每个 $u\in W^{j+m,p}(\Omega)$，存在代表元 $u^*\in C_B^j(\Omega)$，满足
+
+$$
+\max_{|\alpha|\le j}\sup_{x\in\Omega}|D^\alpha u^*(x)|
+\le C\|u\|_{W^{j+m,p}(\Omega)}.
+$$
+
+在 $j=0$ 时，这同时给出了有界性和连续性。图片旁注将它与 $L^\infty$ 联系起来，可写成 $C_B^0(\Omega)\hookrightarrow L^\infty(\Omega)$。连续代表元还允许谈每个内部点的函数值。一般 $L^\infty$ 元素则按几乎处处相等识别，可能有跳跃。
+
+**B 的临界端点。** 对每个给定的有限 $q\ge p$，各有常数 $C_q$。若要由这一族不等式推出 $q=\infty$，还需控制常数随 $q$ 增长的行为。判题时若恰有 $p=1,m=n$，应当回到 A 行取更强的连续和 $q=\infty$ 结论。这是 A 和 B 的重叠情形。
+
+一个能看出临界困难的例子是 $n\ge2$，$\Omega=B_{1/2}(0)$，$m=1,p=n$。令 $u(x)=\log\log(e/|x|)$，原点值可任取。$u$ 在原点附近本性无界，但对每个有限 $q\ge1$ 都属于 $L^q(\Omega)$，因为极坐标换元 $t=\log(e/r)$ 后，积分在无穷处由 $(\log t)^q e^{-nt}$ 控制。同时
+
+$$
+|\nabla u(x)|=\frac1{|x|\log(e/|x|)},\qquad
+\int_\Omega|\nabla u|^n\,dx
+=|\mathbb S^{n-1}|\int_0^{1/2}\frac{dr}{r(\log(e/r))^n}<\infty .
+$$
+
+在删去小球 $B_\varepsilon(0)$ 的区域分部积分，新增的边界项至多为常数乘 $\varepsilon^{n-1}\log\log(e/\varepsilon)$，趋于零，因此以上经典梯度确实给出全域弱梯度。这个 $W^{1,n}$ 函数说明临界行中的严格不等号有实际内容。
+
+**C 的临界指数。** 统一记
+
+$$
+p_k^*=\frac{kp}{n-mp},\qquad
+\frac{k}{p_k^*}=\frac np-m .
+$$
+
+取 $k=n$ 就得到常见的 $1/p_n^*=1/p-m/n$。上端点 $q=p_k^*$ 可以取到。下端维数另有一个要单独看的等号。对 $p=1$，若 $k=n-m$，则 $p_k^*=1$，定理只给出 $q=1$。对 $p>1$，这一定理要求 $k>n-mp$，即便在代数上把 $k=n-mp$ 代进分式能算出一个数字，也须先满足维数假设。
+
+**为什么分子是 $k$、分母却含 $n$？** 在 $\mathbb R^n$ 中取光滑紧支集函数 $\phi$，使它在经过原点的 $k$ 维平面 $H$ 上限制非零。令 $u_\varepsilon(x)=\phi(x/\varepsilon)$。直接换元得
+
+$$
+\|u_\varepsilon|_H\|_{L^q(H)}
+=\varepsilon^{k/q}\|\phi|_H\|_{L^q(H)},\qquad
+\|D^\alpha u_\varepsilon\|_{L^p(\mathbb R^n)}
+=\varepsilon^{n/p-|\alpha|}\|D^\alpha\phi\|_p .
+$$
+
+对 $0<\varepsilon\le1$，完整 $W^{m,p}$ 范数至多为 $C_\phi\varepsilon^{n/p-m}$。若迹估计对所有这些函数成立，则 $\varepsilon^{k/q}\le C'\varepsilon^{n/p-m}$。令 $\varepsilon\downarrow0$ 可知 $k/q\ge n/p-m$，在 $mp<n$ 时即 $q\le p_k^*$。截面按 $k$ 维体积缩放，原函数的导数按 $n$ 维体积缩放，这解释了两个维数各自的位置。缩放给出了必要约束，端点可达到则来自嵌入定理的证明。
+
+### 第二部分　强局部 Lipschitz 条件下的边界正则性
+
+此时 A 行中的 $C_B^j(\Omega)$ 可加强为 $C^j(\overline\Omega)$。按本书约定，各阶导数在域内有界且一致连续，从而在闭包有唯一连续延拓。若再记 $s=m-n/p$，教材的两个 Hölder 结论如下。
+
+| 指数位置 | Hölder 目标 |
+|---|---|
+| $mp>n>(m-1)p$，即 $0
+
+例如头一行给出对每个 $|\alpha|\le j$ 的估计
+
+$$
+|D^\alpha u^*(x)-D^\alpha u^*(y)|
+\le C\|u\|_{W^{j+m,p}(\Omega)} |x-y|^\lambda ,
+\qquad x,y\in\overline\Omega .
+$$
+
+对 $0<s<1$，在尺度 $r$ 上这个差的自然幂次是 $r^s$。§4.16 中对奇性核的积分将出现同一个指数。控制两个点的差比单点有界多一步，完整证明还要使用区域的几何条件。
+
+### 第三部分　一般开区域上的零边界空间
+
+用 $W_0^{j+m,p}(\Omega)$ 作源空间时，第一、二部分相应的结论在任意开区域上都成立，相应各行的指数条件仍须满足。理由来自上章的零延拓。记 $\widetilde u$ 为 $u$ 在 $\Omega$ 外补零，由 §3.27，
+
+$$
+\|\widetilde u\|_{W^{j+m,p}(\mathbb R^n)}
+=\|u\|_{W^{j+m,p}(\Omega)}.
+$$
+
+先对 $\widetilde u$ 使用全空间的嵌入，再将结果限制到 $\Omega$ 或 $\Omega_k$ 即可。对一般 $W^{j+m,p}(\Omega)$，能给出同样推理的是一个有界延拓算子 $E$，要求 $Eu=u$ 几乎处处成立于 $\Omega$，且全空间范数受原范数控制。
+
+### 把参数真正代进去
+
+以下各题中，使用第一部分时假设锥条件，使用第二部分时假设强局部 Lipschitz 条件。
+
+1. **三维 $H^1=W^{1,2}$。** 取 $n=3,m=1,p=2,j=0$，$mp=2<3$。域内取 $k=3$，得 $2\le q\le6$。平面截面取 $k=2$，得 $2\le q\le4$。若取直线 $k=1$，恰好等于 $n-mp$，未满足 $p>1$ 时的严格条件。
+2. **三维 $W^{1,3}$ 和 $W^{1,4}$。** 前者 $mp=n$，故域内可取所有 $3\le q<\infty$。后者 $mp>n$，得有界连续代表元。加强区域条件后，$s=1-3/4=1/4$，可以取 $C^{0,1/4}(\overline\Omega)$。
+3. **三维 $W^{2,2}$ 要估计哪一阶？** 若问 $u$ 本身，取 $j=0,m=2$，可得域内有界连续，强局部 Lipschitz 条件下更有 $C^{0,1/2}$。若问一阶导数可积到几次，保留 $j=1$ 阶，此时只剩 $m=1$，故 $W^{2,2}(\Omega)\hookrightarrow W^{1,6}(\Omega)$。
+4. **$p=1$ 时的两个端点。** 三维 $W^{2,1}$ 的直线截面有 $k=n-m=1$，C 行给出 $L^1$ 迹。三维 $W^{3,1}$ 满足 $m=n$，A 行直接给出有界连续代表元。
+
+## §4.13–§4.14　定理的使用说明与证明安排
+
+**有限测度时补齐较小的 $q$。** 若目标集合 $E$ 的相应维数测度 $|E|$ 有限，$1\le q<p$，则对 $|v|^q\cdot1$ 用 Hölder 不等式，开 $q$ 次方得到
+
+$$
+\|v\|_{L^q(E)}\le |E|^{1/q-1/p}\|v\|_{L^p(E)}.
+$$
+
+因此域内的结果在 $|\Omega|<\infty$ 时可向下取到 $q=1$。截面结果使用的是 $|\Omega_k|_k<\infty$。教材还预告，对整个区域的 $W^{m,p}(\Omega)\hookrightarrow L^q(\Omega)$，若 $q<p$，则区域有限体积是必要条件（定理 6.43）。第 85 页手写速记中若把下界写为 $1$，做题时可先检查这一测度条件。教材还提到光滑流形上的迹可在后续定理中处理。本节低维积分一律针对仿射平面内部的截面。
+
+**为什么证明里常取 $j=0$？** 若 $u\in W^{j+m,p}(\Omega)$，则对 $|\alpha|\le j$，$D^\alpha u\in W^{m,p}(\Omega)$。例如利用已经证明的零阶结论可得
+
+$$
+\|D^\alpha u\|_{L^q(\Omega)}
+\le C\|D^\alpha u\|_{W^{m,p}(\Omega)}
+\le C'\|u\|_{W^{j+m,p}(\Omega)} .
+$$
+
+对有限多个 $\alpha$ 求和就得到 $W^{j,q}$ 估计。对截面，光滑函数的各阶切向导数是环境导数的线性组合，与限制可交换，再由稠密性取极限。对连续代表元，先对光滑逼近序列及其各阶导数用零阶一致估计，再在内部小球上应用微积分基本定理识别一致极限的导数。这给出同一个 $C^j$ 代表元。
+
+**常数与证明方法。** 在第一部分中，常数可依赖 $n,m,p,q,j,k$ 和统一锥的高度、开口，与具体函数及锥顶位置无关。在估计链中不同的 $C$ 可以取不同数值。原书说明第一部分也有弱锥条件的推广，见 [Adams 与 Fournier 关于弱锥条件的论文](https://www.sciencedirect.com/science/article/pii/0022247X77901731)。本课的 §4.15 直接使用几何锥。§4.14 指出势方法通过沿线段积分得到局部核估计，适合 A 以及 $p>1$ 的 B、C 情形。在 $mp=n$ 时，势方法还能追踪有限 $q$ 的嵌入常数随 $q$ 增大而增长的阶。另有 Gagliardo 的组合平均法可处理 $p=1$ 的有关端点。§4.16 具体完成第一部分 A 的证明，后续各情形还需相应的积分估计。
+
+<a name="local" id="local"></a>
+
+## §4.15　局部估计（式 (8)，标注“常考”）
+
+固定一个内点 $x$。锥条件给出以 $x$ 为顶点、完全包含在 $\Omega$ 内的有限锥 $C_x$。它的高 $\rho$ 和张角 $\kappa$ 对所有 $x$ 相同，轴向可以随 $x$ 改变。令 $0<r\le\rho$，记 $C_{x,r}=\{y\in C_x:\lvert y-x\rvert\le r\}$。有常数 $c>0$ 使 $|C_{x,r}|=cr^n$，这是把相同张角的单位锥旋转、平移并缩放 $r$ 倍的结果。
+
+对 $u\in C^\infty(\Omega)$，引理断言
+
+$$
+\begin{aligned}
+|u(x)|\le K\Bigg(&
+ \sum_{|\alpha|\le m-1}r^{|\alpha|-n}
+       \int_{C_{x,r}}|D^\alpha u(y)|\,dy\\
+ &+\sum_{|\alpha|=m}\int_{C_{x,r}}
+       |x-y|^{m-n}|D^\alpha u(y)|\,dy\Bigg).
+\end{aligned}\tag{8}
+$$
+
+$K$ 可按 $m,n$ 和锥的几何参数统一选取。几何条件的作用已经出现在等式左边与右边之间：为了用 $y$ 附近的导数估计 $u(x)$，需要把连接 $y$ 与 $x$ 的整条线段放在定义域内。下面分别找出低阶项的 $r^{|\alpha|-n}$ 和最高阶项的 $|x-y|^{m-n}$ 从哪里来。
+
+### 一、把多元函数限制到一条线段
+
+对 $y\in C_{x,r}$，令 $h=x-y$，$\gamma(t)=y+th$，$f(t)=u(\gamma(t))$，$0\le t\le1$。$\gamma(0)=y$，$\gamma(1)=x$。由一元链式法则，
+
+$$
+f'(t)=\sum_{i=1}^n h_i\,\partial_i u(\gamma(t)).
+$$
+
+$h_i$ 与 $t$ 无关。每再求一次导数，就多作用一次算子 $h\cdot\nabla$。将它的 $s$ 次幂用多项式定理展开，得
+
+$$
+f^{(s)}(t)=(h\cdot\nabla)^s u(\gamma(t))
+=\sum_{|\alpha|=s}\frac{s!}{\alpha!}h^\alpha D^\alpha u(\gamma(t)).
+\tag{*}
+$$
+
+<a name="hw-one" id="hw-one"></a>
+
+**批注作业一（二维）。** 写 $h=(a,b)=(x_1-y_1,x_2-y_2)$。下式的偏导数都在同一点 $y+t(a,b)$ 取值。直接求导得
+
+$$
+\begin{aligned}
+ f'   &=a u_1+b u_2,\\
+ f''  &=a^2u_{11}+2ab\,u_{12}+b^2u_{22},\\
+ f''' &=a^3u_{111}+3a^2b\,u_{112}+3ab^2u_{122}+b^3u_{222}.
+\end{aligned}
+$$
+
+例如二阶中有两项 $ab u_{12}$ 与 $ab u_{21}$，因为 $u$ 光滑，二者相等，可以合并。一般地，$s$ 次求导中有 $\ell$ 次选 $\partial_2$ 的方式数是 $\binom{s}{\ell}$，故
+
+$$
+f^{(s)}(t)
+=\sum_{\ell=0}^s \binom{s}{\ell}\,
+a^{s-\ell}b^\ell
+(\partial_1^{s-\ell}\partial_2^\ell u)(y+t(a,b)).
+$$
+
+以 $\alpha=(s-\ell,\ell)$ 代入就得到式 $(*)$。这也说明组合数来自可交换偏导的不同排列。
+
+### 二、从板书上的分部积分得到 Taylor 积分余项
+
+定义
+
+$$
+R_s=\frac{1}{(s-1)!}\int_0^1(1-t)^{s-1} f^{(s)}(t)\,dt,\qquad s\ge1.
+$$
+
+微积分基本定理给出 $R_1=f(1)-f(0)$。当 $s\ge2$ 时，写 $f^{(s)}(t)\,dt=d f^{(s-1)}(t)$ 并分部积分。$t=1$ 的边界项因 $(1-t)^{s-1}=0$ 而消失，于是
+
+$$
+R_s=-\frac{f^{(s-1)}(0)}{(s-1)!}+R_{s-1}.
+$$
+
+逐次代回 $f(1)=f(0)+R_1$，便得到
+
+$$
+f(1)=\sum_{s=0}^{m-1}\frac{f^{(s)}(0)}{s!}
+   +\frac1{(m-1)!}\int_0^1(1-t)^{m-1}f^{(m)}(t)\,dt.
+$$
+
+将 $(*)$ 代入。低阶项的 $s!$ 消去，余项的 $m!/(m-1)!=m$。用三角不等式与 $|h^\alpha|\le |h|^{|\alpha|}$ 可知
+
+$$
+\begin{aligned}
+|u(x)|\le{}&
+\sum_{|\alpha|\le m-1}\frac{|x-y|^{|\alpha|}}{\alpha!}|D^\alpha u(y)|\\
+&+\sum_{|\alpha|=m}\frac{m}{\alpha!}|x-y|^m
+ \int_0^1(1-t)^{m-1}|D^\alpha u(x+(1-t)(y-x))|\,dt .
+\end{aligned}
+$$
+
+### 三、对锥内的 $y$ 取平均，计算余项
+
+先对 $y\in C_{x,r}$ 积分，然后除以 $cr^n$。左边恰好还原为 $|u(x)|$。在低阶项中 $|x-y|^{|\alpha|}\le r^{|\alpha|}$，故产生式 (8) 第一行的 $r^{|\alpha|-n}$。
+
+固定 $|\alpha|=m$，记 $g=|D^\alpha u|$。最高阶项在除体积、乘系数之前是
+
+$$
+I=\int_{C_{x,r}}\int_0^1
+     |x-y|^m(1-t)^{m-1}g(x+(1-t)(y-x))\,dt\,dy.
+$$
+
+**第一次换序后固定 $t$。** 被积函数非负，由 Tonelli 定理可先对 $y$ 积分。对 $t<1$ 令 $z=x+(1-t)(y-x)$。这是以 $x$ 为中心、比例为 $1-t$ 的伸缩，因此
+
+$$
+z\in C_{x,(1-t)r},\qquad dy=(1-t)^{-n}dz,\qquad
+|x-y|^m=(1-t)^{-m}|x-z|^m.
+$$
+
+三个幂次相加得 $(m-1)-m-n=-n-1$。单点 $t=1$ 对积分无影响，于是
+
+$$
+I=\int_0^1(1-t)^{-n-1}
+      \int_{C_{x,(1-t)r}} |x-z|^m g(z)\,dz\,dt.
+$$
+
+![圆锥伸缩与第二次换序的积分区域](E:\2026-2027学年\课程\soblev空间\笔记\cone-change-of-order.png)
+
+左图显示 $t$ 固定时 $y$ 和 $z$ 的位置，右图用三角形表示所有允许的距离与时间。沿红色竖线积分，就是固定 $z$ 后对 $t$ 积分。
+
+**第二次换序后固定 $z$。** 固定 $z\in C_{x,r}\setminus\{x\}$，写 $s=|x-z|$。约束 $s\le(1-t)r$ 等价于 $0\le t\le1-s/r$。由 Tonelli 定理，
+
+$$
+\begin{aligned}
+I
+ &=\int_{C_{x,r}}s^m g(z)
+       \int_0^{1-s/r}(1-t)^{-n-1}\,dt\,dz\\
+ &=\frac1n\int_{C_{x,r}}s^m g(z)
+       \left[\left(\frac r s\right)^n-1\right]\,dz\\
+ &\le \frac{r^n}{n}\int_{C_{x,r}}s^{m-n}g(z)\,dz .
+\end{aligned}
+$$
+
+这里 $z=x$ 是零测集。最后一步舍去一个非正项，方向为“$\le$”。现在除以 $cr^n$，$r^n$ 消去，只留下势核 $|x-z|^{m-n}$。把有限个系数并入 $K$，式 (8) 即得。
+
+**板书自检。** 伸缩 $z=x+(1-t)(y-x)$ 的体积因子带来空间维数 $n$，Taylor 余项带来阶数 $m$。核的指数因此是 $m-n$。当 $m<n$ 时核在顶点附近无界，但其局部 $L^1$ 积分的径向部分是 $\int_0^r s^{m-1}ds$，对 $m\ge1$ 有限。下一节要判断的是更强的 $L^{p'}$ 可积性。
+
+<a name="case-a" id="case-a"></a>
+
+## §4.16　从局部估计证明定理 4.12 第一部分的 A 情形
+
+先取 $j=0$，设 $u\in C^\infty(\Omega)\cap W^{m,p}(\Omega)$。目标是依次控制 $\Omega$ 上的点值、截面 $\Omega_k$ 上的 $L^p$ 范数，并由此得到所有 $p\le q\le\infty$ 的估计。
+
+### 一、对式 (8) 应用 Hölder 不等式
+
+在每点取相同半径 $r=\rho$。低阶项对 $1<p<\infty$ 满足
+
+$$
+\rho^{|\alpha|-n}\!\int_{C_{x,\rho}}|D^\alpha u|
+\le c^{1/p'}\rho^{|\alpha|-n/p}
+         \|D^\alpha u\|_{L^p(C_{x,\rho})}.
+$$
+
+这是因为 $\|1\|_{L^{p'}(C_{x,\rho})}=(c\rho^n)^{1/p'}$ 且 $1/p+1/p'=1$。最高阶项满足
+
+$$
+\int_{C_{x,\rho}} |D^\alpha u(y)|\,|x-y|^{m-n}dy
+\le \|D^\alpha u\|_{L^p(C_{x,\rho})}
+       \left(\int_{C_{x,\rho}}|x-y|^{(m-n)p'}dy\right)^{1/p'} .
+$$
+
+记 $\sigma$ 为锥的方向集合在单位球面上的面积。取 $s=|x-y|$，令 $b=(m-n)p'+n$，则
+
+$$
+\int_{C_{x,\rho}}|x-y|^{(m-n)p'}dy
+ =\sigma\int_0^\rho s^{b-1}ds
+ =\frac{\sigma}{b}\rho^b\qquad(b>0).
+$$
+
+径向积分的收敛条件与最后的尺度分别是
+
+$$
+b=\frac{mp-n}{p-1}>0\iff mp>n,\qquad
+\frac{b}{p'}=m-n+\frac{n}{p'}=m-\frac np .
+$$
+
+这就回答了页边“$m-n/p$ 是怎么来的”。若 $mp=n$ 且 $p>1$，径向积分为 $\sigma\int_0^\rho ds/s$，对数发散。它精确指出此处的 Hölder 点值证明在哪一步失效。
+
+**$p=1$ 的处理。** A 情形这时包含 $m=n$ 和 $m>n$。最高阶核可直接用本性上界控制：$m=n$ 时核等于 $1$，$m>n$ 时核不超过 $\rho^{m-n}$。低阶项原本就是 $L^1$ 积分。因此两种情况均得到与上面相同的估计。特别地，临界的 $W^{n,1}$ 保留点值控制。
+
+把 $\rho$、有限个系数和锥角参数并入常数，先得局部不等式，再得全局一致上界：
+
+$$
+|u(x)|\le K\sum_{|\alpha|\le m}
+       \|D^\alpha u\|_{L^p(C_{x,\rho})}
+\le K_1\|u\|_{m,p,\Omega}.
+$$
+
+第二步用了 $C_{x,\rho}\subset\Omega$，以及有限项向量的 $\ell^1$ 和 $\ell^p$ 范数估计。$K_1$ 对每个 $x$ 相同，这使我们可以在左边取上确界。
+
+### 二、从光滑函数得到连续代表
+
+对任意 $u\in W^{m,p}(\Omega)$，由定理 3.17 可取光滑 $u_i\to u$ 于 $W^{m,p}(\Omega)$。将点值估计用于差 $u_i-u_\ell$，有
+
+$$
+\sup_{x\in\Omega}|u_i(x)-u_\ell(x)|
+   \le K_1\|u_i-u_\ell\|_{m,p,\Omega}\longrightarrow0 .
+$$
+
+因此 $u_i$ 一致收敛到一个有界连续函数 $v$。另一方面 $u_i\to u$ 于 $L^p(\Omega)$，有子列几乎处处收敛到 $u$。同一子列仍处处收敛到 $v$，故 $v=u$ 几乎处处。若另有连续代表与 $v$ 在某点不同，连续性使二者在一个小球上仍不同，与几乎处处相等矛盾。由此得到唯一连续代表和估计
+
+$$
+\|v\|_{C_B^0(\Omega)}\le K_1\|u\|_{m,p,\Omega}.
+$$
+
+当 $\Omega$ 无界时，一致收敛本身仅提供上确界范数控制。用 $L^p$ 收敛的子列识别代表，在无界区域也适用。
+
+### 三、为什么还要在截面上做一次积分
+
+取 $k$ 维仿射平面 $H$，$\Omega_k=H\cap\Omega$，在 $H$ 上用 $k$ 维测度 $d\mathcal H^k$。对无限测度的截面，仅有上确界控制还不能推出 $L^p(\Omega_k)$ 控制。为此保留上式中教材编号为 (10) 的**局部**估计。
+
+先令 $u$ 光滑。将每个 $|D^\alpha u|^p$ 作为非负可积函数，在 $\Omega$ 外补零，所得函数记为 $g_\alpha$。令 $N$ 为 $|\alpha|\le m$ 的指标个数。由 $(\sum_{\nu=1}^N a_\nu)^p\le N^{p-1}\sum_{\nu=1}^N a_\nu^p$ 和 $C_{x,\rho}\subset\overline{B_\rho(x)}$，球面又为 $n$ 维零测集，可得
+
+$$
+|u(x)|^p\le K\sum_{|\alpha|\le m}
+          \int_{B_\rho(x)}g_\alpha(y)\,dy .
+$$
+
+对 $x\in\Omega_k$ 积分，交换两个非负积分的次序。对固定 $y$ 而言，被计入的 $x$ 恰好属于 $\Omega_k\cap B_\rho(y)$，故
+
+$$
+\begin{aligned}
+\int_{\Omega_k}|u(x)|^p\,d\mathcal H^k(x)
+ &\le K\sum_{|\alpha|\le m}\int_{\mathbb R^n}
+        g_\alpha(y)\,\mathcal H^k(\Omega_k\cap B_\rho(y))\,dy\\
+ &\le K\omega_k\rho^k\sum_{|\alpha|\le m}\int_{\Omega}|D^\alpha u(y)|^p\,dy
+ =K\omega_k\rho^k\|u\|_{m,p,\Omega}^p .
+\end{aligned}
+$$
+
+$\omega_k$ 表示 $\mathbb R^k$ 中单位球的体积。球与平面的交集至多是半径 $\rho$ 的 $k$ 维球，再与 $\Omega$ 相交只会减小体积。图片中的“积出来是常数”指这个**统一上界**，真实交集的体积可以随 $y$ 变化。此处零延拓的是积分中的 $g_\alpha$，因此整个估计也不需要对 $u$ 本身在边界作 Sobolev 零延拓。
+
+### 四、由两个端点得到其余指数，再恢复 $j$
+
+写 $v=u\vert_{\Omega_k}$。前两步给出 $\|v\|_{L^\infty(\Omega_k)}$ 和 $\|v\|_{L^p(\Omega_k)}$ 的控制。对 $p<q<\infty$，
+
+$$
+\int_{\Omega_k}|v|^q
+  \le\|v\|_\infty^{q-p}\int_{\Omega_k}|v|^p,\qquad
+\|v\|_q\le\|v\|_\infty^{1-p/q}\|v\|_p^{p/q}.
+$$
+
+这一步对无限测度截面同样成立。至此对光滑函数得出所有 $p\le q\le\infty$ 的迹估计。把估计用于光滑逼近序列的差，其限制便在目标空间中收敛，且极限独立于逼近序列。在 A 情形，由上一节的一致收敛，该极限也就是连续代表在 $\Omega_k$ 上的限制。
+
+最后，$u\in W^{j+m,p}(\Omega)$ 意味着其所有 $|\beta|\le j$ 阶弱导数都属于 $W^{m,p}(\Omega)$。取光滑逼近并对这些导数逐个应用上面的估计，它们分别有一致收敛的连续代表。在区域内部的任一小球上，对光滑逼近函数沿坐标线用微积分基本定理，再令逼近指标趋于无穷，就得到这些极限确实是 $u$ 的经典偏导数。于是 $u$ 的代表属于 $C_B^j(\Omega)$。在 $H$ 上选正交坐标后，切向偏导是环境偏导的常系数组合。对同一逼近列的切向导数使用上述迹估计并通过极限，得到 $W^{j,q}(\Omega_k)$ 范数控制。这分别给出定理 4.12 的式 (1) 与式 (2)。
+
+**板演时可用三句话串起这两节。** 锥内沿线段作 Taylor 展开并取平均，最高阶余项产生势核 $|x-y|^{m-n}$。该核的 $L^{p'}$ 范数把 $mp>n$ 转成与点 $x$ 无关的估计，光滑逼近遂给出连续代表。保留局部估计再对截面积分，利用球与平面的交集体积有统一上界，就得到迹的 $L^p$ 端点。
+
+<a name="hw-two" id="hw-two"></a>
+
+## 作业二　三维单位球内的势核有多大
+
+第 89 页取 $m=1$、$n=3$、$\rho=1$。把横轴记作 $s=p'$，这样不会把共轭指数与主定理的目标指数 $q$ 混起来。题目所画的是函数
+
+$$
+f(s)=\left(\int_{B_1(0)\subset\mathbb R^3}|x|^{-2s}\,dx\right)^{1/s}.
+$$
+
+使用通常的三维 Lebesgue 体积，球面面积为 $4\pi$。紧靠原点时 $|x|^{-2s}$ 可能无界，所以先去掉半径为 $\varepsilon$ 的小球，再让 $\varepsilon\downarrow0$。在球坐标中，每层球壳贡献 $4\pi r^2\,dr$，故
+
+$$
+\int_{\varepsilon<|x|<1}|x|^{-2s}\,dx
+=4\pi\int_\varepsilon^1 r^{2-2s}\,dr
+=\begin{cases}
+4\pi(1-\varepsilon^{3-2s})/(3-2s),&s\ne3/2,\\
+4\pi\log(1/\varepsilon),&s=3/2.
+\end{cases}
+$$
+
+对范数指数 $s\ge1$，于是得到
+
+$$
+\boxed{\displaystyle
+ f(s)=\left(\frac{4\pi}{3-2s}\right)^{1/s}\quad(1\le s<3/2),
+ \qquad f(s)=+\infty\quad(3/2\le s<\infty).}
+$$
+
+若把 $s=\infty$ 也作为范数指数，则 $\||x|^{-2}\|_{L^\infty(B_1)}=+\infty$。若半径改为一般的 $\rho>0$，在收敛区间内只需把上式乘 $\rho^{3/s-2}$。以 $s=p'$ 代回，这个幂就是 $3/p'-2=1-3/p=m-n/p$。
+
+| $s=p'$ | $f(s)$ 的值 | 如何读数 |
+|---|---:|---|
+| $1$ | $4\pi\approx12.5664$ | 作图左端。对本课有限 $p>1$ 而言，$p'$ 从右趋近 $1$ |
+| $1.1$ | $12.2287$ | 已略低于左端 |
+| $1.25$ | $13.1884$ | 有限 |
+| $4/3$ | $(12\pi)^{3/4}\approx15.2142$ | 对应 $p=4$，此时 $mp=4>3$ |
+| $1.49$ | $75.5045$ | 接近临界点时迅速增大 |
+| $3/2$ | $+\infty$ | 对应 $p=3$，此时为对数发散 |
+
+![三维单位球内势核的范数及左端放大图](E:\2026-2027学年\课程\soblev空间\笔记\kernel-norm.png)
+先在 $s=3/2$ 处作竖直渐近线，标出 $(1,4\pi)$。曲线先小幅下降，在 $s\approx1.1006$ 处达到最低值约 $12.2287$，再上升到正无穷。这个小转折来自范数的外层幂 $1/s$，只看被积函数随 $s$ 增大容易漏掉。具体地，
+
+$$
+\frac{d}{ds}\log f(s)=\frac{G(s)}{s^2},\qquad
+G(s)=\frac{2s}{3-2s}-\log\frac{4\pi}{3-2s},\qquad
+G'(s)=\frac{4s}{(3-2s)^2}>0 .
+$$
+
+由于 $G(1)=2-\log(4\pi)<0$，且 $s\uparrow3/2$ 时 $G(s)\to+\infty$，所以导数只变号一次。以上用的是未归一化的球体积，常量 $4\pi$ 应保留才能得到题目要求的具体值和图像。
+
+**与定理的联系。** 对 $1<p<\infty$，把 $p'=p/(p-1)$ 代进 $p'<3/2$，整理不等式得到 $2p<3(p-1)$，即 $p>3$。在三维只控制一阶导数时，这恰好是 §4.16 的点值证明成立的范围。若 $p=3$，仍有 §4.12 B 的每个有限 $q\ge3$ 的估计，作业中发散的是试图用该核控制点值时需要的积分。
+
+<a name="review" id="review"></a>
+
